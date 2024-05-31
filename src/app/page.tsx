@@ -1,19 +1,19 @@
-import ECommerce from "@/components/Dashboard/E-commerce";
-import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { NextPage } from "next";
 
-export const metadata: Metadata = {
-  title:
-    "Next.js E-commerce Dashboard | TailAdmin - Next.js Dashboard Template",
-  description: "This is Next.js Home for TailAdmin Dashboard Template",
+const Home: NextPage = () => {
+  // Redirect to "/dashboard" when the Server Component renders
+  if (typeof window === "undefined") {
+    return (
+      <>
+        <DefaultLayout>
+          <div>Dashboard</div>
+        </DefaultLayout>
+      </>
+    );
+  } else {
+    return null; // Don't render anything on the client-side
+  }
 };
 
-export default function Home() {
-  return (
-    <>
-      <DefaultLayout>
-        <ECommerce />
-      </DefaultLayout>
-    </>
-  );
-}
+export default Home;

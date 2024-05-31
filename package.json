@@ -9,25 +9,35 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "antd": "^5.17.4",
     "apexcharts": "^3.45.2",
+    "chart.js": "^4.4.3",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "dayjs": "^1.11.11",
     "flatpickr": "^4.6.13",
+    "js-cookie": "^3.0.5",
     "jsvectormap": "^1.5.3",
+    "moment": "^2.30.1",
+    "next": "14.1.0",
     "react": "^18",
     "react-apexcharts": "^1.4.1",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
-    "next": "14.1.0"
+    "react-svg-worldmap": "^2.0.0-alpha.16"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/antd": "^1.0.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.0",
     "postcss": "^8",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.0"
+    "typescript": "^5"
   }
 }
