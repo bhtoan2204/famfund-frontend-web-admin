@@ -6,9 +6,11 @@ import { LogsRepository } from "@/repository/logs.repository";
 import { LogsUseCase } from "@/usecase/logs.usecase";
 import { useEffect, useState } from "react";
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
-import { Button, Col, DatePicker, Form, Input, Modal, Pagination, Row, Select, Spin, Table, Tag } from 'antd';
+import { Button, Col, DatePicker, Descriptions, Form, Input, Modal, Pagination, Row, Select, Spin, Table, Tag, Typography } from 'antd';
 import dayjs from 'dayjs';
 import dynamic from "next/dynamic";
+import { DataFetcherRepository } from "@/repository/data-fetcher.repository";
+import { DatafetcherUsecase } from "@/usecase/data-fetcher.usecase";
 
 interface LogsReponse {
   url: string;
@@ -34,8 +36,26 @@ interface Filter {
   sortDirection: string | null;
 }
 
+interface IPData {
+  status: string;
+  country: string;
+  countryCode: string;
+  region: string;
+  regionName: string;
+  city: string;
+  zip: string;
+  lat: number;
+  lon: number;
+  timezone: string;
+  isp: string;
+  org: string;
+  as: string;
+  query: string;
+}
+
 const LogsPage = () => {
   const logsUseCase = new LogsUseCase(new LogsRepository());
+  const datafetcherUsecase = new DatafetcherUsecase(new DataFetcherRepository());
   const [logsCount, setLogsCount] = useState({
     total: "0",
     info: "0",
@@ -70,13 +90,55 @@ const LogsPage = () => {
     return text;
   };
 
+  const [selectedIP, setSelectedIP] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [ipData, setIPData] = useState<IPData>({
+    status: "",
+    country: "",
+    countryCode: "",
+    region: "",
+    regionName: "",
+    city: "",
+    zip: "",
+    lat: 0,
+    lon: 0,
+    timezone: "",
+    isp: "",
+    org: "",
+    as: "",
+    query: "",
+  });
+
+  const fetchIPDataData = async (ipAddress: string) => {
+    try {
+      const response = await datafetcherUsecase.getIpData(ipAddress);
+
+      if (response.status === 200) {
+        console.error("Error IPData API:");
+      }
+      setIPData(response.data);
+    } catch (error) {
+      console.error("Error IPData API:", error);
+    }
+  };
+
+  const handleShowIPData = (ipAddress: string) => {
+    setSelectedIP(ipAddress);
+    setIsModalVisible(true);
+    fetchIPDataData(ipAddress);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+
   const columns = [
     { title: 'No', dataIndex: 'index', key: 'index', width: 50, align: 'center' as const, render: (text: any, record: LogsReponse, index: number) => (index + 1) + (filter.page - 1) * filter.itemsPerPage },
-    { title: 'URL', dataIndex: 'url', key: 'url', align: 'center' as const},
+    { title: 'URL', dataIndex: 'url', key: 'url', align: 'center' as const },
     { title: 'Method', dataIndex: 'method', key: 'method', align: 'center' as const },
     { title: 'Status Code', dataIndex: 'statusCode', key: 'statusCode', align: 'center' as const },
     { title: 'Content Length', dataIndex: 'contentLength', key: 'contentLength', align: 'center' as const },
-    { title: 'Log Level', dataIndex: 'log.level', key: 'logLevel', align: 'center' as const,  render: (text: string) => renderLogLevel(text), },
+    { title: 'Log Level', dataIndex: 'log.level', key: 'logLevel', align: 'center' as const, render: (text: string) => renderLogLevel(text), },
     { title: 'Time (ms)', dataIndex: 'responseTimeMs', key: 'responseTimeMs', align: 'center' as const },
     { title: 'Message', dataIndex: 'message', key: 'message', align: 'center' as const },
     { title: 'IP', dataIndex: 'ip', key: 'ip', align: 'center' as const },
@@ -93,6 +155,16 @@ const LogsPage = () => {
         });
         return formattedDate;
       }
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      align: 'center' as const,
+      render: (text: string, record: LogsReponse) => (
+        <Button onClick={() => handleShowIPData(record.ip)}>
+          IP Data
+        </Button>
+      ),
     },
   ];
 
@@ -235,6 +307,51 @@ const LogsPage = () => {
   return (
     <div>
       <DefaultLayout>
+        <Modal
+          title={`IPData Information for ${selectedIP}`}
+          open={isModalVisible}
+          onCancel={handleCloseModal}
+          footer={null}
+          width={1200}
+        >
+          {ipData ? (
+            <Descriptions>
+              <Descriptions.Item label="IP Address">
+                {ipData.query}
+              </Descriptions.Item>
+              <Descriptions.Item label="City">
+                {ipData.city}
+              </Descriptions.Item>
+              <Descriptions.Item label="Region">
+                {ipData.regionName}
+              </Descriptions.Item>
+              <Descriptions.Item label="Country">
+                {ipData.country}
+              </Descriptions.Item>
+              <Descriptions.Item label="Lattitude">
+                {ipData.lat}
+              </Descriptions.Item>
+              <Descriptions.Item label="Longitude">
+                {ipData.lon}
+              </Descriptions.Item>
+              <Descriptions.Item label="Timezone">
+                {ipData.timezone}
+              </Descriptions.Item>
+              <Descriptions.Item label="ISP">
+                {ipData.isp}
+              </Descriptions.Item>
+              <Descriptions.Item label="Organization">
+                {ipData.org}
+              </Descriptions.Item>
+              <Descriptions.Item label="AS">
+                {ipData.as}
+              </Descriptions.Item>
+            </Descriptions>
+          ) : (
+            <Spin />
+          )}
+        </Modal>
+        <Typography.Title level={2}>Logs Statistics</Typography.Title>
         <div className="flex flex-col gap-4 md:gap-6 xl:gap-7.5">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
             <CardDataStats title="Total request" total={logsCount.total}>
@@ -373,7 +490,7 @@ const LogsPage = () => {
                   dataSource={logsData}
                   columns={columnsWithEvent}
                   pagination={false}
-                  scroll={{ y: 600 }} // Giảm chiều cao scroll của Table
+                  scroll={{ y: 600 }}
                   size="middle"
                   rowKey={(record: any) =>
                     `${record.timestamp}-${record.ip}-${record.url}-${record.responseTimeMs}`

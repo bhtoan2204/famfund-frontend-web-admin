@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import { Chart, ChartData, registerables } from 'chart.js';
 import WorldMap from "react-svg-worldmap";
-import { DatePicker, Spin, message } from "antd";
+import { DatePicker, Spin, Typography, message } from "antd";
 import dayjs from "dayjs";
 import 'chartjs-adapter-date-fns';
 
@@ -405,32 +405,6 @@ const PieChartCombined: React.FC<PieChartProps> = ({
     ],
   };
 
-  const options = {
-    plugins: {
-      legend: {
-        display: true,
-        position: 'bottom',
-        labels: {
-          padding: 20,
-          usePointStyle: true,
-        },
-        align: 'center',
-        maxWidth: 200, // set a max width for legend items to force wrapping into a grid
-      },
-      tooltip: {
-        callbacks: {
-          label: (context: any) => {
-            const label = context.label || '';
-            const value = context.parsed;
-            const total = context.dataset.data.reduce((sum: number, i: number) => sum + i, 0);
-            const percentage = Math.round((value / total) * 100);
-            return `${label}: ${value} (${percentage}%)`;
-          },
-        },
-      },
-    },
-  };
-
   return (
     <div className="flex flex-row gap-4">
       <div className="w-1/3 m-5">
@@ -696,6 +670,7 @@ const ProxyPage = () => {
 
   return (
     <DefaultLayout>
+      <Typography.Title level={2}>Proxy Statistics</Typography.Title>
       <Spin spinning={isLoading}>
         <div className="flex flex-col gap-8">
           <div className="stickyDatepicker top-0 z-10 flex items-center gap-4 bg-gray-100 p-4 rounded-md">
