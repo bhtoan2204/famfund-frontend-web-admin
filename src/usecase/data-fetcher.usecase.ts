@@ -16,4 +16,24 @@ export class DatafetcherUsecase {
       throw error;
     }
   }
+
+  async getSummary() {
+    try {
+      const response = await this.datafetcherRepository.getSummary();
+      return response;
+    }
+    catch (error) {
+      throw error;
+    }
+  }
+
+  async getRevenueLast6Months() {
+    try {
+      const response = await this.datafetcherRepository.getRevenueLast6Months();
+      return response;
+    }
+    catch (error) {
+      throw error;
+    }
+  }
 }

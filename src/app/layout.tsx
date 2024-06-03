@@ -5,6 +5,9 @@ import "@/css/satoshi.css";
 import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
+import { persistor, store } from "@/redux/store";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function RootLayout({
   children,
@@ -21,10 +24,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <div className="dark:bg-boxdark-2 dark:text-bodydark">
-          {loading ? <Loader /> : children}
-        </div>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <div className="dark:bg-boxdark-2 dark:text-bodydark">
+              {loading ? <Loader /> : children}
+            </div>
+          </PersistGate>
+        </Provider>
       </body>
-    </html>
+    </html >
   );
 }

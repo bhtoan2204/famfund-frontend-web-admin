@@ -1,13 +1,14 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
-import Link from "next/link";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { Metadata } from "next";
-import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import { LoginUseCase } from "@/usecase/login.usecase";
-import { UserRepository } from "@/repository/user.repository";
+import { AuthUseCase } from "@/usecase/auth.usecase";
+import { AuthRepository } from "@/repository/user.repository";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { setUser } from "@/redux/slices/user.slices";
+import { ProfileUseCase } from "@/usecase/profile.usecase";
+import { ProfileRepository } from "@/repository/profile.repository";
 
 interface State {
   email: string
@@ -15,9 +16,12 @@ interface State {
 }
 
 const SignIn: React.FC = () => {
+  const authUseCase = new AuthUseCase(new AuthRepository());
+  const profileUseCase = new ProfileUseCase(new ProfileRepository());
+  const dispatch = useDispatch<AppDispatch>();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: "banhhaotoan2002@gmail.com",
+    password: "Password123",
   });
 
   const [errorMessage, setErrorMessage] = useState("⠀");
@@ -45,9 +49,10 @@ const SignIn: React.FC = () => {
       return;
     }
     try {
-      const loginUseCase = new LoginUseCase(new UserRepository());
-      const response = await loginUseCase.execute(formData.email, formData.password);
+      const response = await authUseCase.login(formData.email, formData.password);
       if (response.status === 200) {
+        const profile = await profileUseCase.getProfile();
+        dispatch(setUser(profile.data.data));
         window.location.href = "/dashboard";
       } else {
         setErrorMessage(response.data.message || "Something went wrong. Please try again.")
