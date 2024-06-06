@@ -11,8 +11,7 @@ export class DatafetcherUsecase {
     try {
       const response = await this.datafetcherRepository.getIpData(ip);
       return response;
-    }
-    catch (error) {
+    } catch (error) {
       throw error;
     }
   }
@@ -21,8 +20,7 @@ export class DatafetcherUsecase {
     try {
       const response = await this.datafetcherRepository.getSummary();
       return response;
-    }
-    catch (error) {
+    } catch (error) {
       throw error;
     }
   }
@@ -31,8 +29,22 @@ export class DatafetcherUsecase {
     try {
       const response = await this.datafetcherRepository.getRevenueLast6Months();
       return response;
+    } catch (error) {
+      throw error;
     }
-    catch (error) {
+  }
+
+  async getUserOrders(dto: {
+    page: number;
+    itemsPerPage: number;
+    search: string | null;
+    sort: string | null;
+    packageId: number | null;
+  }) {
+    try {
+      const response = await this.datafetcherRepository.getUserOrders(dto);
+      return response;
+    } catch (error) {
       throw error;
     }
   }
