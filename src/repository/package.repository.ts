@@ -56,11 +56,18 @@ export interface UpdatePackage {
   is_active: boolean;
 }
 
+export interface UpdateExtraPackage {
+  id_extra_package: number;
+  price: number;
+  description?: string;
+  is_active: boolean;
+}
+
 export class PackageRepository {
   protected readonly backendUrl = process.env.NEXT_PUBLIC_API_URL;
 
-  async getPackages(data: GetPackages): Promise<any> { }
-  
+  async getPackages(data: GetPackages): Promise<any> {}
+
   async createPackage(values?: any): Promise<any> {}
 
   async updatePackage(values?: any): Promise<any> {}
@@ -220,15 +227,21 @@ export class PackageExtraRepository extends PackageRepository {
     }
   }
 
-  override async updatePackage(): Promise<any> {
+  override async updatePackage(values: UpdateExtraPackage): Promise<any> {
     try {
-      const response = await fetch(`${this.backendUrl}/packages/extra`, {
+      const response = await fetch(`${this.backendUrl}/packageExtra`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
           Authorization: `Bearer ${getCookieCustom("accessToken")}`,
         },
+        body: JSON.stringify({
+          id_extra_package: values.id_extra_package,
+          price: values.price,
+          description: values.description,
+          is_active: values.is_active,
+        }),
       });
       const data = await response.json();
       return { data, status: response.status };
