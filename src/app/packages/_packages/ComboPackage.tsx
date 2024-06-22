@@ -6,21 +6,19 @@ import {
   PackageComboRepository,
 } from "@/repository/package.repository";
 import { PackageUseCase } from "@/usecase/package.usecase";
-import { useEffect, useState } from "react";
-import {
-  Table,
-  Input,
-  Button,
-  Pagination,
-  Modal,
-  Space,
-  Tag,
-  Dropdown,
-  Menu,
-  Descriptions,
-  Badge,
-} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import {
+  Badge,
+  Button,
+  Descriptions,
+  Input,
+  Modal,
+  Pagination,
+  Space,
+  Table,
+  Tag,
+} from "antd";
+import { useEffect, useState } from "react";
 
 export function ComboPackageTab() {
   const [comboPackage, setComboPackage] = useState<ComboPackage[]>([]);
@@ -39,28 +37,29 @@ export function ComboPackageTab() {
   const [sortBy, setSortBy] = useState<string>("id_combo_package");
   const [sortDesc, setSortDesc] = useState<boolean>(false);
 
-  const comboPackageUsecase = new PackageUseCase(new PackageComboRepository());
-
-  const fetchComboPackage = async () => {
-    setLoading(true);
-    try {
-      const response = await comboPackageUsecase.getPackages({
-        page: comboPage,
-        itemsPerPage: comboItemsPerPage,
-        search: searchText,
-        sortBy: sortBy, // Use the state variable for sorting
-        sortDesc: sortDesc,
-      });
-      console.log(response.data);
-      setComboPackage(response.data.data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const comboPackageUsecase = new PackageUseCase(
+      new PackageComboRepository(),
+    );
+
+    const fetchComboPackage = async () => {
+      setLoading(true);
+      try {
+        const response = await comboPackageUsecase.getPackages({
+          page: comboPage,
+          itemsPerPage: comboItemsPerPage,
+          search: searchText,
+          sortBy: sortBy, // Use the state variable for sorting
+          sortDesc: sortDesc,
+        });
+        console.log(response.data);
+        setComboPackage(response.data.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchComboPackage();
   }, [comboPage, comboItemsPerPage, searchText, sortBy, sortDesc]);
 
@@ -101,12 +100,12 @@ export function ComboPackageTab() {
   const columns = [
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("id_combo_package", false, true)}
           style={{ cursor: "pointer" }} // Make it look clickable
         >
           ID
-        </div>
+        </button>
       ),
       dataIndex: "id_combo_package",
       key: "id_combo_package",
@@ -114,12 +113,12 @@ export function ComboPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("name", false, true)}
           style={{ cursor: "pointer" }}
         >
           Name
-        </div>
+        </button>
       ),
       dataIndex: "name",
       key: "name",
@@ -127,12 +126,12 @@ export function ComboPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("price", false, true)}
           style={{ cursor: "pointer" }}
         >
           Price
-        </div>
+        </button>
       ),
       dataIndex: "price",
       key: "price",
@@ -140,24 +139,24 @@ export function ComboPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("description", false, true)}
           style={{ cursor: "pointer" }}
         >
           Description
-        </div>
+        </button>
       ),
       dataIndex: "description",
       key: "description",
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("is_active", false, true)}
           style={{ cursor: "pointer" }}
         >
           Active
-        </div>
+        </button>
       ),
       dataIndex: "is_active",
       key: "is_active",
@@ -170,12 +169,12 @@ export function ComboPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("created_at", false, true)}
           style={{ cursor: "pointer" }}
         >
           Created At
-        </div>
+        </button>
       ),
       dataIndex: "created_at",
       key: "created_at",
@@ -183,12 +182,12 @@ export function ComboPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("updated_at", false, true)}
           style={{ cursor: "pointer" }}
         >
           Updated At
-        </div>
+        </button>
       ),
       dataIndex: "updated_at",
       key: "updated_at",
@@ -258,7 +257,7 @@ export function ComboPackageTab() {
                 key={extraPackage.id_extra_package}
               >
                 <Badge.Ribbon text={`${extraPackage.price}`} color="blue">
-                  <span>{extraPackage.description || "No description"}</span>
+                  <span>{extraPackage.description ?? "No description"}</span>
                 </Badge.Ribbon>
               </Descriptions.Item>
             ))}

@@ -5,18 +5,18 @@ import {
   PackageExtraRepository,
 } from "@/repository/package.repository";
 import { PackageUseCase } from "@/usecase/package.usecase";
-import { useEffect, useState } from "react";
+import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import {
-  Table,
-  Input,
   Button,
+  Dropdown,
+  Input,
+  Menu,
   Pagination,
   Space,
+  Table,
   Tag,
-  Dropdown,
-  Menu,
 } from "antd";
-import { SearchOutlined, DownOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
 
 export function ExtraPackageTab() {
   const [extraPackage, setExtraPackage] = useState<ExtraPackage[]>([]);
@@ -31,32 +31,32 @@ export function ExtraPackageTab() {
   const [sortBy, setSortBy] = useState<string>("id_extra_package");
   const [sortDesc, setSortDesc] = useState<boolean>(false);
 
-  const extraPackageUsecase = new PackageUseCase(new PackageExtraRepository());
-
-  const fetchExtraPackage = async () => {
-    setLoading(true);
-    try {
-      const response = await extraPackageUsecase.getPackages({
-        page: extraPage,
-        itemsPerPage: extraItemsPerPage,
-        search: searchText,
-        sortBy: sortBy,
-        sortDesc: sortDesc,
-      });
-      setExtraPackage(response.data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handlePageChange = (page: number, pageSize: number) => {
     setExtraPage(page);
     setExtraItemsPerPage(pageSize);
   };
 
   useEffect(() => {
+    const extraPackageUsecase = new PackageUseCase(
+      new PackageExtraRepository(),
+    );
+    const fetchExtraPackage = async () => {
+      setLoading(true);
+      try {
+        const response = await extraPackageUsecase.getPackages({
+          page: extraPage,
+          itemsPerPage: extraItemsPerPage,
+          search: searchText,
+          sortBy: sortBy,
+          sortDesc: sortDesc,
+        });
+        setExtraPackage(response.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchExtraPackage();
   }, [extraPage, extraItemsPerPage, searchText, sortBy, sortDesc]);
 
@@ -84,12 +84,12 @@ export function ExtraPackageTab() {
   const columns = [
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("id_extra_package", false, true)}
           style={{ cursor: "pointer" }} // Make it look clickable
         >
           ID
-        </div>
+        </button>
       ),
       dataIndex: "id_extra_package",
       key: "id_extra_package",
@@ -97,12 +97,12 @@ export function ExtraPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("name", false, true)}
           style={{ cursor: "pointer" }}
         >
           Name
-        </div>
+        </button>
       ),
       dataIndex: "name",
       key: "name",
@@ -110,12 +110,12 @@ export function ExtraPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("price", false, true)}
           style={{ cursor: "pointer" }}
         >
           Price
-        </div>
+        </button>
       ),
       dataIndex: "price",
       key: "price",
@@ -123,12 +123,12 @@ export function ExtraPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("description", false, true)}
           style={{ cursor: "pointer" }}
         >
           Description
-        </div>
+        </button>
       ),
       dataIndex: "description",
       key: "description",
@@ -136,12 +136,12 @@ export function ExtraPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("is_active", false, true)}
           style={{ cursor: "pointer" }}
         >
           Active
-        </div>
+        </button>
       ),
       dataIndex: "is_active",
       key: "is_active",
@@ -154,12 +154,12 @@ export function ExtraPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("created_at", false, true)}
           style={{ cursor: "pointer" }}
         >
           Created At
-        </div>
+        </button>
       ),
       dataIndex: "created_at",
       key: "created_at",
@@ -167,12 +167,12 @@ export function ExtraPackageTab() {
     },
     {
       title: (
-        <div
+        <button
           onClick={() => handleSortChange("updated_at", false, true)}
           style={{ cursor: "pointer" }}
         >
           Updated At
-        </div>
+        </button>
       ),
       dataIndex: "updated_at",
       key: "updated_at",
@@ -216,12 +216,12 @@ export function ExtraPackageTab() {
           }
           trigger={["click"]}
         >
-          <a
+          <button
             onClick={(e) => e.preventDefault()}
             style={{ display: "flex", alignItems: "center" }}
           >
             Order by <DownOutlined />
-          </a>
+          </button>
         </Dropdown>
       </div>
       <Table

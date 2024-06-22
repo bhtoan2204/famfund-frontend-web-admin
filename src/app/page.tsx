@@ -5,11 +5,9 @@ const Home: NextPage = () => {
   // Redirect to "/dashboard" when the Server Component renders
   if (typeof window === "undefined") {
     return (
-      <>
-        <DefaultLayout>
-          <div>Dashboard</div>
-        </DefaultLayout>
-      </>
+      <DefaultLayout>
+        <div>Dashboard</div>
+      </DefaultLayout>
     );
   } else {
     return null; // Don't render anything on the client-side

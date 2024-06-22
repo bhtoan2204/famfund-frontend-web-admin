@@ -72,7 +72,7 @@ const DropdownUser = () => {
           <Image
             width={112}
             height={112}
-            src={user?.avatar || "/images/avatar/avatar-1.jpg"}
+            src={user?.avatar ?? "/images/user/user-01.png"}
             style={{
               width: "auto",
               height: "auto",
@@ -98,7 +98,7 @@ const DropdownUser = () => {
         </svg>
       </Link>
 
-      <div
+      <button
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
@@ -152,7 +152,7 @@ const DropdownUser = () => {
           </svg>
           Log Out
         </button>
-      </div>
+      </button>
     </div>
   );
 };
