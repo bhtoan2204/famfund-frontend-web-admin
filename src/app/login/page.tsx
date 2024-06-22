@@ -11,8 +11,8 @@ import { ProfileUseCase } from "@/usecase/profile.usecase";
 import { ProfileRepository } from "@/repository/profile.repository";
 
 interface State {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 const SignIn: React.FC = () => {
@@ -29,15 +29,16 @@ const SignIn: React.FC = () => {
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
-  }
+  };
 
   const validatePassword = (password: string) => {
     return password.length >= 6 && /[A-Z]/.test(password);
   };
 
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [prop]: event.target.value });
-  };
+  const handleChange =
+    (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [prop]: event.target.value });
+    };
 
   const handleLogin = async () => {
     if (!validateEmail(formData.email)) {
@@ -45,27 +46,35 @@ const SignIn: React.FC = () => {
       return;
     }
     if (!validatePassword(formData.password)) {
-      setErrorMessage("Password must be at least 6 characters long and contain at least one capital letter.");
+      setErrorMessage(
+        "Password must be at least 6 characters long and contain at least one capital letter.",
+      );
       return;
     }
     try {
-      const response = await authUseCase.login(formData.email, formData.password);
+      const response = await authUseCase.login(
+        formData.email,
+        formData.password,
+      );
       if (response.status === 200) {
         const profile = await profileUseCase.getProfile();
         dispatch(setUser(profile.data.data));
         window.location.href = "/dashboard";
       } else {
-        setErrorMessage(response.data.message || "Something went wrong. Please try again.")
+        setErrorMessage(
+          response.data.message || "Something went wrong. Please try again.",
+        );
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       console.error(error);
-      setErrorMessage(error.message || "Something went wrong. Please try again.")
+      setErrorMessage(
+        error.message || "Something went wrong. Please try again.",
+      );
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex min-h-screen items-center justify-center">
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
@@ -178,7 +187,9 @@ const SignIn: React.FC = () => {
                     </div>
                   </div>
                   {errorMessage && (
-                    <div style={{ color: "red", marginBottom: "16px" }}>{errorMessage}</div>
+                    <div style={{ color: "red", marginBottom: "16px" }}>
+                      {errorMessage}
+                    </div>
                   )}
                 </form>
               </div>

@@ -7,9 +7,24 @@ import { Card, Col, Row, Statistic, Table, Input, Select } from "antd";
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 const { Search } = Input;
 const { Option } = Select;
@@ -56,12 +71,14 @@ interface UserOrderDTO {
   itemsPerPage: number;
   search: string | null;
   sort: string | null;
-  sortOrder: 'ascend' | 'descend' | null;
+  sortOrder: "ascend" | "descend" | null;
   packageId: number | null;
 }
 
 export default function Dashboard() {
-  const datafetcherUsecase = new DatafetcherUsecase(new DataFetcherRepository());
+  const datafetcherUsecase = new DatafetcherUsecase(
+    new DataFetcherRepository(),
+  );
   const [summary, setSummary] = useState<Summary>({
     total_users: 0,
     total_families: 0,
@@ -70,7 +87,9 @@ export default function Dashboard() {
     revenue_last_6_months: 0,
     total_revenue: 0,
   });
-  const [revenueLast6Months, setRevenueLast6Months] = useState<RevenueLast6Months[]>([]);
+  const [revenueLast6Months, setRevenueLast6Months] = useState<
+    RevenueLast6Months[]
+  >([]);
   const [userOrders, setUserOrders] = useState<UserOrder[]>([]);
   const [userOrderDTO, setUserOrderDTO] = useState<UserOrderDTO>({
     page: 1,
@@ -84,7 +103,8 @@ export default function Dashboard() {
 
   const getListUserOrders = async () => {
     try {
-      const { data, status } = await datafetcherUsecase.getUserOrders(userOrderDTO);
+      const { data, status } =
+        await datafetcherUsecase.getUserOrders(userOrderDTO);
       if (status === 200) {
         setUserOrders(data.data);
         setTotalOrders(data.total); // Assuming total comes from the API
@@ -145,7 +165,7 @@ export default function Dashboard() {
   const chartData = {
     labels: revenueLast6Months.map(
       (item) =>
-        `${new Date(item.month).getMonth() + 1}-${new Date(item.month).getFullYear()}`
+        `${new Date(item.month).getMonth() + 1}-${new Date(item.month).getFullYear()}`,
     ),
     datasets: [
       {
@@ -263,7 +283,10 @@ export default function Dashboard() {
             </Col>
             <Col span={6}>
               <Card>
-                <Statistic title="Total Families" value={summary.total_families} />
+                <Statistic
+                  title="Total Families"
+                  value={summary.total_families}
+                />
               </Card>
             </Col>
             <Col span={6}>
@@ -281,6 +304,39 @@ export default function Dashboard() {
                   title="Total Orders Pending"
                   value={summary.total_orders_pending}
                   prefix={<ArrowDownOutlined />}
+                />
+              </Card>
+            </Col>
+          </Row>
+
+          <Row gutter={16} style={{ marginBottom: "24px" }}>
+            <Col span={6}>
+              <Card>
+                <Statistic title="Main Packages" value={summary.total_users} />
+              </Card>
+            </Col>
+            <Col span={6}>
+              <Card>
+                <Statistic
+                  title="Extra Packages"
+                  value={summary.total_families}
+                />
+              </Card>
+            </Col>
+            <Col span={6}>
+              <Card>
+                <Statistic
+                  title="Combo Packages"
+                  value={summary.total_orders_succeeded}
+                />
+              </Card>
+            </Col>
+            <Col span={6}>
+              <Card>
+                <Statistic
+                  title="Revenue"
+                  value={summary.total_orders_pending}
+                  prefix={<ArrowUpOutlined />}
                 />
               </Card>
             </Col>
@@ -317,6 +373,7 @@ export default function Dashboard() {
                 total: totalOrders,
               }}
               onChange={handleTableChange}
+              scroll={{ x: "max-content" }} // Thêm thuộc tính scroll
             />
           </Card>
         </div>
