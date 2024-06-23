@@ -1,5 +1,7 @@
 import {
+  CreateComboPackage,
   CreatePackage,
+  EditComboPackage,
   GetPackages,
   PackageRepository,
   UpdateExtraPackage,
@@ -25,7 +27,7 @@ export class PackageUseCase {
   }
 
   async createPackage(
-    values: CreatePackage,
+    values: CreatePackage | CreateComboPackage,
   ): Promise<{ data: any; message: string }> {
     try {
       const response = await this.packageRepository.createPackage(values);
@@ -36,7 +38,7 @@ export class PackageUseCase {
   }
 
   async updatePackage(
-    values?: UpdatePackage,
+    values?: UpdatePackage | UpdateExtraPackage | EditComboPackage,
   ): Promise<{ data: any; message: string }> {
     try {
       const response = await this.packageRepository.updatePackage(values);
@@ -49,17 +51,6 @@ export class PackageUseCase {
   async deletePackage(id: number): Promise<void> {
     try {
       await this.packageRepository.deletePackage(id);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async updateExtraPackage(
-    values?: UpdateExtraPackage,
-  ): Promise<{ data: any; message: string }> {
-    try {
-      const response = await this.packageRepository.updatePackage(values);
-      return response;
     } catch (error) {
       throw error;
     }

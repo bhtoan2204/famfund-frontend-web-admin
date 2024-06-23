@@ -3,6 +3,7 @@
 import {
   ExtraPackage,
   PackageExtraRepository,
+  UpdateExtraPackage,
 } from "@/repository/package.repository";
 import { PackageUseCase } from "@/usecase/package.usecase";
 import { SearchOutlined } from "@ant-design/icons";
@@ -36,10 +37,9 @@ export function ExtraPackageTab() {
   const [selectedExtraPackage, setSelectedExtraPackage] =
     useState<ExtraPackage | null>(null);
 
+  const extraPackageUsecase = new PackageUseCase(new PackageExtraRepository());
+
   useEffect(() => {
-    const extraPackageUsecase = new PackageUseCase(
-      new PackageExtraRepository(),
-    );
     const fetchExtraPackage = async () => {
       setLoading(true);
       try {
@@ -175,19 +175,15 @@ export function ExtraPackageTab() {
 
   const handleEditFormSubmit = async (values: any) => {
     form.validateFields().then(async () => {
-      const extraPackageUsecase = new PackageUseCase(
-        new PackageExtraRepository(),
-      );
       try {
         await extraPackageUsecase
-          .updateExtraPackage({
+          .updatePackage({
             id_extra_package: selectedExtraPackage?.id_extra_package!,
             price: parseInt(values.price),
             description: values.description,
             is_active: values.is_active,
-          })
+          } as UpdateExtraPackage)
           .then((response) => {
-            console.log(response.data);
             setExtraPackage((prev) =>
               prev.map((extraPackage) =>
                 extraPackage.id_extra_package ===
@@ -209,7 +205,7 @@ export function ExtraPackageTab() {
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+      <div className="mb-4 flex items-center">
         <Input
           placeholder="Search extra packages..."
           prefix={<SearchOutlined />}
@@ -252,7 +248,7 @@ export function ExtraPackageTab() {
             rules={[
               {
                 required: true,
-                message: "Please input the price of the main package!",
+                message: "Please input the price of the extra package!",
                 pattern: new RegExp(/^\d+$/),
               },
             ]}
@@ -268,7 +264,7 @@ export function ExtraPackageTab() {
             rules={[
               {
                 required: true,
-                message: "Please choose the status of the main package!",
+                message: "Please choose the status of the extra package!",
               },
             ]}
           >

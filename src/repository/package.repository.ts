@@ -24,7 +24,7 @@ export interface ExtraPackage {
 export interface ComboPackage {
   id_combo_package: number;
   name: string;
-  price: number;
+  price: string;
   description?: string;
   is_active: boolean;
   created_at: string | Date;
@@ -63,6 +63,22 @@ export interface UpdateExtraPackage {
   is_active: boolean;
 }
 
+export interface CreateComboPackage {
+  name: string;
+  description: string;
+  id_package_extra: number[];
+  price: number;
+}
+
+export interface EditComboPackage {
+  id_combo_package: number;
+  name: string;
+  description: string;
+  id_package_extra: number[];
+  price: number;
+  is_active: boolean;
+}
+
 export class PackageRepository {
   protected readonly backendUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -96,19 +112,73 @@ export class PackageComboRepository extends PackageRepository {
     }
   }
 
-  override async updatePackage(): Promise<any> {
+  override async createPackage(values: CreateComboPackage): Promise<any> {
     try {
-      const response = await fetch(`${this.backendUrl}/packages/combo`, {
-        method: "PUT",
+      const response = await fetch(`${this.backendUrl}/packageCombo`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${getCookieCustom("accessToken")}`,
+        },
+        body: JSON.stringify({
+          name: values.name,
+          description: values.description,
+          id_package_extra: values.id_package_extra,
+          price: values.price,
+        }),
+      });
+      const data = await response.json();
+      return { data, status: response.status };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  override async updatePackage(values: EditComboPackage): Promise<any> {
+    console.log(values);
+    try {
+      const response = await fetch(
+        `${this.backendUrl}/packageCombo/${values.id_combo_package}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${getCookieCustom("accessToken")}`,
+          },
+          body: JSON.stringify({
+            name: values.name,
+            description: values.description,
+            id_package_extra: values.id_package_extra,
+            price: values.price,
+            is_active: values.is_active,
+          }),
+        },
+      );
+      const data = await response.json();
+      return { data, status: response.status };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  override async deletePackage(id: number): Promise<void> {
+    try {
+      const response = await fetch(`${this.backendUrl}/packageCombo/${id}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
           Authorization: `Bearer ${getCookieCustom("accessToken")}`,
         },
       });
-      const data = await response.json();
-      return { data, status: response.status };
+
+      if (response.status !== 204) {
+        throw new Error("Failed to delete package");
+      }
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
@@ -160,7 +230,6 @@ export class PackageMainRepository extends PackageRepository {
 
   override async updatePackage(values: UpdatePackage): Promise<any> {
     try {
-      console.log(values);
       const response = await fetch(`${this.backendUrl}/packageMain`, {
         method: "PUT",
         headers: {

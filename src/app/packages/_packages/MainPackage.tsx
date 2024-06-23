@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CreatePackage,
   MainPackage,
   PackageMainRepository,
 } from "@/repository/package.repository";
@@ -37,8 +38,9 @@ export function MainPackageTab() {
   const [isCreateModalVisible, setIsCreateModalVisible] =
     useState<boolean>(false);
 
+  const mainPackageUsecase = new PackageUseCase(new PackageMainRepository());
+
   useEffect(() => {
-    const mainPackageUsecase = new PackageUseCase(new PackageMainRepository());
     const fetchMainPackage = async () => {
       setLoading(true);
       try {
@@ -192,7 +194,6 @@ export function MainPackageTab() {
   };
 
   const handleDeleteOk = () => {
-    const mainPackageUsecase = new PackageUseCase(new PackageMainRepository());
     mainPackageUsecase
       .deletePackage(selectedMainPackage?.id_main_package!)
       .then(() => {
@@ -228,11 +229,6 @@ export function MainPackageTab() {
     form
       .validateFields()
       .then((values) => {
-        console.log(values);
-
-        const mainPackageUsecase = new PackageUseCase(
-          new PackageMainRepository(),
-        );
         mainPackageUsecase
           .updatePackage({
             id_main_package: selectedMainPackage?.id_main_package!,
@@ -269,18 +265,13 @@ export function MainPackageTab() {
     form
       .validateFields()
       .then((values) => {
-        console.log(values);
-
-        const mainPackageUsecase = new PackageUseCase(
-          new PackageMainRepository(),
-        );
         mainPackageUsecase
           .createPackage({
             name: values.name,
             description: values.description,
             price: values.price,
             duration_months: parseInt(values.duration_months),
-          })
+          } as CreatePackage)
           .then((response) => {
             setMainPackage((prev) =>
               prev.concat({
