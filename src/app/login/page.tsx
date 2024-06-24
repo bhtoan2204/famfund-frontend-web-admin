@@ -58,7 +58,7 @@ const SignIn: React.FC = () => {
       );
       if (response.status === 200) {
         const profile = await profileUseCase.getProfile();
-        dispatch(setUser(profile.data.data));
+        dispatch(setUser(profile.data));
         window.location.href = "/dashboard";
       } else {
         setErrorMessage(
