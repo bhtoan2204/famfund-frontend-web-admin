@@ -44,7 +44,6 @@ const userSlice = createSlice({
       state.user = action.payload;
       state.loading = false;
       state.error = null;
-      console.log(state.user);
     },
   },
 });

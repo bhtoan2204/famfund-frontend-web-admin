@@ -1,7 +1,7 @@
 "use client";
 
 import { userLogout } from "@/redux/slices/user.slices";
-import { AppDispatch, RootState, useAppSelector } from "@/redux/store";
+import { AppDispatch, useAppSelector } from "@/redux/store";
 import { AuthRepository } from "@/repository/user.repository";
 import { AuthUseCase } from "@/usecase/auth.usecase";
 import Image from "next/image";
@@ -70,13 +70,10 @@ const DropdownUser = () => {
         </span>
         <span className="h-12 w-12 overflow-hidden rounded-full">
           <Image
-            width={112}
-            height={112}
+            width={48}
+            height={48}
             src={user?.avatar ?? "/images/user/user-01.png"}
-            style={{
-              width: "auto",
-              height: "auto",
-            }}
+            className="h-full w-full object-cover"
             alt="User"
           />
         </span>

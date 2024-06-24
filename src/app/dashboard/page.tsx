@@ -3,19 +3,19 @@
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { DataFetcherRepository } from "@/repository/data-fetcher.repository";
 import { DatafetcherUsecase } from "@/usecase/data-fetcher.usecase";
-import { Card, Col, Row, Statistic, Table, Input, Select } from "antd";
-import { useEffect, useState } from "react";
-import { Bar } from "react-chartjs-2";
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
+import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
+import { Card, Col, Input, Row, Select, Statistic, Table } from "antd";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
   BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
+import { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
