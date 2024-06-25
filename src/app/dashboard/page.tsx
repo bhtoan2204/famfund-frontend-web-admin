@@ -271,113 +271,111 @@ export default function Dashboard() {
   ];
 
   return (
-    <>
-      <DefaultLayout>
-        <div>
-          <h1>Dashboard</h1>
-          <Row gutter={16} style={{ marginBottom: "24px" }}>
-            <Col span={6}>
-              <Card>
-                <Statistic title="Total Users" value={summary.total_users} />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Total Families"
-                  value={summary.total_families}
-                />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Total Orders Succeeded"
-                  value={summary.total_orders_succeeded}
-                  prefix={<ArrowUpOutlined />}
-                />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Total Orders Pending"
-                  value={summary.total_orders_pending}
-                  prefix={<ArrowDownOutlined />}
-                />
-              </Card>
-            </Col>
-          </Row>
+    <DefaultLayout>
+      <div>
+        <h1>Dashboard</h1>
+        <Row gutter={16} style={{ marginBottom: "24px" }}>
+          <Col span={6}>
+            <Card>
+              <Statistic title="Total Users" value={summary.total_users} />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                title="Total Families"
+                value={summary.total_families}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                title="Total Orders Succeeded"
+                value={summary.total_orders_succeeded}
+                prefix={<ArrowUpOutlined />}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                title="Total Orders Pending"
+                value={summary.total_orders_pending}
+                prefix={<ArrowDownOutlined />}
+              />
+            </Card>
+          </Col>
+        </Row>
 
-          <Row gutter={16} style={{ marginBottom: "24px" }}>
-            <Col span={6}>
-              <Card>
-                <Statistic title="Main Packages" value={summary.total_users} />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Extra Packages"
-                  value={summary.total_families}
-                />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Combo Packages"
-                  value={summary.total_orders_succeeded}
-                />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Revenue"
-                  value={summary.total_orders_pending}
-                  prefix={<ArrowUpOutlined />}
-                />
-              </Card>
-            </Col>
-          </Row>
+        <Row gutter={16} style={{ marginBottom: "24px" }}>
+          <Col span={6}>
+            <Card>
+              <Statistic title="Main Packages" value={summary.total_users} />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                title="Extra Packages"
+                value={summary.total_families}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                title="Combo Packages"
+                value={summary.total_orders_succeeded}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                title="Revenue"
+                value={summary.total_orders_pending}
+                prefix={<ArrowUpOutlined />}
+              />
+            </Card>
+          </Col>
+        </Row>
 
-          <Card>
-            <h2>Revenue Last 6 Months</h2>
-            <Bar data={chartData} options={chartOptions} />
-          </Card>
+        <Card>
+          <h2>Revenue Last 6 Months</h2>
+          <Bar data={chartData} options={chartOptions} />
+        </Card>
 
-          <Card style={{ marginTop: "24px" }}>
-            <h2>User Orders</h2>
-            <Search
-              placeholder="Search by keyword"
-              onSearch={handleSearch}
-              style={{ width: 200, marginBottom: 16 }}
-            />
-            <Select
-              placeholder="Filter by Package"
-              onChange={handlePackageChange}
-              allowClear
-              style={{ width: 200, marginLeft: 16, marginBottom: 16 }}
-            >
-              <Option value={1}>Basic</Option>
-              <Option value={2}>Premium</Option>
-            </Select>
-            <Table
-              dataSource={userOrders}
-              columns={columns}
-              rowKey="id_order"
-              pagination={{
-                current: userOrderDTO.page,
-                pageSize: userOrderDTO.itemsPerPage,
-                total: totalOrders,
-              }}
-              onChange={handleTableChange}
-              scroll={{ x: "max-content" }} // Thêm thuộc tính scroll
-            />
-          </Card>
-        </div>
-      </DefaultLayout>
-    </>
+        <Card style={{ marginTop: "24px" }}>
+          <h2>User Orders</h2>
+          <Search
+            placeholder="Search by keyword"
+            onSearch={handleSearch}
+            style={{ width: 200, marginBottom: 16 }}
+          />
+          <Select
+            placeholder="Filter by Package"
+            onChange={handlePackageChange}
+            allowClear
+            style={{ width: 200, marginLeft: 16, marginBottom: 16 }}
+          >
+            <Option value={1}>Basic</Option>
+            <Option value={2}>Premium</Option>
+          </Select>
+          <Table
+            dataSource={userOrders}
+            columns={columns}
+            rowKey="id_order"
+            pagination={{
+              current: userOrderDTO.page,
+              pageSize: userOrderDTO.itemsPerPage,
+              total: totalOrders,
+            }}
+            onChange={handleTableChange}
+            scroll={{ x: "max-content" }} // Thêm thuộc tính scroll
+          />
+        </Card>
+      </div>
+    </DefaultLayout>
   );
 }

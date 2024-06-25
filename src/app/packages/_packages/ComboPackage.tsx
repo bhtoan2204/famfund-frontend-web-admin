@@ -162,6 +162,7 @@ export function ComboPackageTab() {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
+      render: (created_at: string) => new Date(created_at).toLocaleString(),
       sorter: {
         compare: (a: ComboPackage, b: ComboPackage) =>
           new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
@@ -172,6 +173,7 @@ export function ComboPackageTab() {
       title: "Updated At",
       dataIndex: "updated_at",
       key: "updated_at",
+      render: (updated_at: string) => new Date(updated_at).toLocaleString(),
       sorter: {
         compare: (a: ComboPackage, b: ComboPackage) =>
           new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime(),
