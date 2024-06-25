@@ -162,7 +162,7 @@ const FeedbackkPage = () => {
         <Card title="Feedback">
           <div className="mb-4 flex items-center gap-4">
             <Input
-              placeholder="Search combo packages..."
+              placeholder="Search..."
               prefix={<SearchOutlined />}
               onChange={handleSearch}
             />

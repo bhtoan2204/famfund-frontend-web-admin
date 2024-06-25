@@ -15,4 +15,13 @@ export class ProfileUseCase {
       throw error;
     }
   }
+
+  async updateProfile(data: any) {
+    try {
+      const response = await this.profileRepository.updateProfile(data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
