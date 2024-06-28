@@ -39,4 +39,23 @@ export class ProfileRepository {
       throw error;
     }
   }
+
+  async updateAvatar(data: string) {
+    try {
+      const response = await fetch(`${this.backendUrl}/user/changeAvatar`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${getCookieCustom("accessToken")}`,
+        },
+        body: JSON.stringify({ avatar: data }),
+      });
+      const responseData = await response.json();
+      return { data: responseData, status: response.status };
+    }
+    catch (error) {
+      throw error;
+    }
+  }
 }

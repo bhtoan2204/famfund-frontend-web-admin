@@ -24,4 +24,13 @@ export class ProfileUseCase {
       throw error;
     }
   }
+
+  async updateAvatar(data: string) {
+    try {
+      const response = await this.profileRepository.updateAvatar(data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
