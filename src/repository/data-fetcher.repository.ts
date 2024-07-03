@@ -58,8 +58,8 @@ export class DataFetcherRepository {
     page: number;
     itemsPerPage: number;
     search: string | null;
-    sort: string | null;
-    packageId: number | null;
+    sortBy: string | null;
+    sortDirection: "ASC" | "DESC" | null;
   }) {
     try {
       const response = await fetch(`${this.backendUrl}/listOrders`, {

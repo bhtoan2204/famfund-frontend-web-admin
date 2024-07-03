@@ -3,8 +3,15 @@
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { DataFetcherRepository } from "@/repository/data-fetcher.repository";
 import { DatafetcherUsecase } from "@/usecase/data-fetcher.usecase";
-import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
-import { Card, Col, Input, Row, Select, Statistic, Table } from "antd";
+import {
+  ArrowUpOutlined,
+  UserOutlined,
+  TeamOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CloseCircleOutlined,
+} from "@ant-design/icons";
+import { Card, Col, Row, Statistic } from "antd";
 import {
   BarElement,
   CategoryScale,
@@ -26,45 +33,22 @@ ChartJS.register(
   Legend,
 );
 
-const { Search } = Input;
-const { Option } = Select;
-
 interface Summary {
-  total_users: number;
-  total_families: number;
-  total_orders_succeeded: number;
-  total_orders_pending: number;
-  revenue_last_6_months: number;
-  total_revenue: number;
+  totalUsers: number;
+  totalFamilies: number;
+  totalOrderSuccess: number;
+  totalOrderPending: number;
+  totalOrderFailed: number;
+  totalRevenue: number;
+  totalMainPackageOrderSuccess: number;
+  totalExtraPackageOrderSuccess: number;
+  totalComboPackageOrderSuccess: number;
 }
 
 interface RevenueLast6Months {
   month: string;
   monthly_revenue: number;
 }
-
-interface User {
-  id_user: string;
-  email: string;
-  phone: string;
-  firstname: string;
-  lastname: string;
-  avatar: string;
-}
-
-interface Order {
-  id_order: number;
-  id_package: number;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  method: string;
-  package_expired_at: string;
-  package_name: string;
-  package_price: number;
-}
-
-interface UserOrder extends User, Order {}
 
 interface UserOrderDTO {
   page: number;
@@ -76,43 +60,24 @@ interface UserOrderDTO {
 }
 
 export default function Dashboard() {
-  const datafetcherUsecase = new DatafetcherUsecase(
-    new DataFetcherRepository(),
-  );
   const [summary, setSummary] = useState<Summary>({
-    total_users: 0,
-    total_families: 0,
-    total_orders_succeeded: 0,
-    total_orders_pending: 0,
-    revenue_last_6_months: 0,
-    total_revenue: 0,
+    totalUsers: 0,
+    totalFamilies: 0,
+    totalOrderSuccess: 0,
+    totalOrderPending: 0,
+    totalOrderFailed: 0,
+    totalRevenue: 0,
+    totalMainPackageOrderSuccess: 0,
+    totalExtraPackageOrderSuccess: 0,
+    totalComboPackageOrderSuccess: 0,
   });
   const [revenueLast6Months, setRevenueLast6Months] = useState<
     RevenueLast6Months[]
   >([]);
-  const [userOrders, setUserOrders] = useState<UserOrder[]>([]);
-  const [userOrderDTO, setUserOrderDTO] = useState<UserOrderDTO>({
-    page: 1,
-    itemsPerPage: 10,
-    search: null,
-    sort: null,
-    sortOrder: null,
-    packageId: null,
-  });
-  const [totalOrders, setTotalOrders] = useState<number>(0);
 
-  const getListUserOrders = async () => {
-    try {
-      const { data, status } =
-        await datafetcherUsecase.getUserOrders(userOrderDTO);
-      if (status === 200) {
-        setUserOrders(data.data);
-        setTotalOrders(data.total); // Assuming total comes from the API
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const datafetcherUsecase = new DatafetcherUsecase(
+    new DataFetcherRepository(),
+  );
 
   const getRevenueLast6Months = async () => {
     try {
@@ -129,37 +94,11 @@ export default function Dashboard() {
     try {
       const { data, status } = await datafetcherUsecase.getSummary();
       if (status === 200) {
-        setSummary(data.data[0]);
+        setSummary(data.data);
       }
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleSearch = (value: string) => {
-    setUserOrderDTO((prev) => ({
-      ...prev,
-      search: value,
-      page: 1,
-    }));
-  };
-
-  const handleTableChange = (pagination: any, filters: any, sorter: any) => {
-    setUserOrderDTO((prev) => ({
-      ...prev,
-      page: pagination.current,
-      itemsPerPage: pagination.pageSize,
-      sort: sorter.order ? sorter.field : null,
-      sortOrder: sorter.order || null,
-    }));
-  };
-
-  const handlePackageChange = (value: number) => {
-    setUserOrderDTO((prev) => ({
-      ...prev,
-      packageId: value,
-      page: 1,
-    }));
   };
 
   const chartData = {
@@ -194,115 +133,60 @@ export default function Dashboard() {
     getRevenueLast6Months();
   }, []);
 
-  useEffect(() => {
-    getListUserOrders();
-  }, [userOrderDTO]);
-
-  const columns = [
-    {
-      title: "Order ID",
-      dataIndex: "id_order",
-      key: "id_order",
-      sorter: true,
-    },
-    {
-      title: "Package Name",
-      dataIndex: "package_name",
-      key: "package_name",
-      sorter: true,
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      sorter: true,
-    },
-    {
-      title: "Created At",
-      dataIndex: "created_at",
-      key: "created_at",
-      sorter: true,
-    },
-    {
-      title: "Updated At",
-      dataIndex: "updated_at",
-      key: "updated_at",
-      sorter: true,
-    },
-    {
-      title: "Method",
-      dataIndex: "method",
-      key: "method",
-    },
-    {
-      title: "Package Expiry Date",
-      dataIndex: "package_expired_at",
-      key: "package_expired_at",
-    },
-    {
-      title: "Package Price",
-      dataIndex: "package_price",
-      key: "package_price",
-    },
-    {
-      title: "First Name",
-      dataIndex: "firstname",
-      key: "firstname",
-      sorter: true,
-    },
-    {
-      title: "Last Name",
-      dataIndex: "lastname",
-      key: "lastname",
-      sorter: true,
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-      sorter: true,
-    },
-    {
-      title: "Phone",
-      dataIndex: "phone",
-      key: "phone",
-      sorter: true,
-    },
-  ];
-
   return (
     <DefaultLayout>
       <div>
         <h1>Dashboard</h1>
-        <Row gutter={16} style={{ marginBottom: "24px" }}>
-          <Col span={6}>
+        <Row
+          gutter={20}
+          style={{
+            marginBottom: "24px",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Col flex="1 1 18%">
             <Card>
-              <Statistic title="Total Users" value={summary.total_users} />
+              <Statistic
+                title="Total Users"
+                value={summary.totalUsers}
+                prefix={<UserOutlined />}
+              />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col flex="1 1 18%">
             <Card>
               <Statistic
                 title="Total Families"
-                value={summary.total_families}
+                value={summary.totalFamilies}
+                prefix={<TeamOutlined />}
               />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col flex="1 1 18%">
             <Card>
               <Statistic
                 title="Total Orders Succeeded"
-                value={summary.total_orders_succeeded}
-                prefix={<ArrowUpOutlined />}
+                value={summary.totalOrderSuccess}
+                prefix={<CheckCircleOutlined style={{ color: "green" }} />}
               />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col flex="1 1 18%">
             <Card>
               <Statistic
                 title="Total Orders Pending"
-                value={summary.total_orders_pending}
-                prefix={<ArrowDownOutlined />}
+                value={summary.totalOrderPending}
+                prefix={<ClockCircleOutlined style={{ color: "orange" }} />}
+              />
+            </Card>
+          </Col>
+          <Col flex="1 1 18%">
+            <Card>
+              <Statistic
+                title="Total Orders Failed"
+                value={summary.totalOrderFailed}
+                prefix={<CloseCircleOutlined style={{ color: "red" }} />}
               />
             </Card>
           </Col>
@@ -311,14 +195,17 @@ export default function Dashboard() {
         <Row gutter={16} style={{ marginBottom: "24px" }}>
           <Col span={6}>
             <Card>
-              <Statistic title="Main Packages" value={summary.total_users} />
+              <Statistic
+                title="Main Packages"
+                value={summary.totalMainPackageOrderSuccess}
+              />
             </Card>
           </Col>
           <Col span={6}>
             <Card>
               <Statistic
                 title="Extra Packages"
-                value={summary.total_families}
+                value={summary.totalExtraPackageOrderSuccess}
               />
             </Card>
           </Col>
@@ -326,7 +213,7 @@ export default function Dashboard() {
             <Card>
               <Statistic
                 title="Combo Packages"
-                value={summary.total_orders_succeeded}
+                value={summary.totalComboPackageOrderSuccess}
               />
             </Card>
           </Col>
@@ -334,7 +221,7 @@ export default function Dashboard() {
             <Card>
               <Statistic
                 title="Revenue"
-                value={summary.total_orders_pending}
+                value={summary.totalRevenue}
                 prefix={<ArrowUpOutlined />}
               />
             </Card>
@@ -344,36 +231,6 @@ export default function Dashboard() {
         <Card>
           <h2>Revenue Last 6 Months</h2>
           <Bar data={chartData} options={chartOptions} />
-        </Card>
-
-        <Card style={{ marginTop: "24px" }}>
-          <h2>User Orders</h2>
-          <Search
-            placeholder="Search by keyword"
-            onSearch={handleSearch}
-            style={{ width: 200, marginBottom: 16 }}
-          />
-          <Select
-            placeholder="Filter by Package"
-            onChange={handlePackageChange}
-            allowClear
-            style={{ width: 200, marginLeft: 16, marginBottom: 16 }}
-          >
-            <Option value={1}>Basic</Option>
-            <Option value={2}>Premium</Option>
-          </Select>
-          <Table
-            dataSource={userOrders}
-            columns={columns}
-            rowKey="id_order"
-            pagination={{
-              current: userOrderDTO.page,
-              pageSize: userOrderDTO.itemsPerPage,
-              total: totalOrders,
-            }}
-            onChange={handleTableChange}
-            scroll={{ x: "max-content" }} // Thêm thuộc tính scroll
-          />
         </Card>
       </div>
     </DefaultLayout>

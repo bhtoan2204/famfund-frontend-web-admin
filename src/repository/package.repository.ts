@@ -29,7 +29,7 @@ export interface ComboPackage {
   is_active: boolean;
   created_at: string | Date;
   updated_at: string | Date;
-  id_package_extra: ExtraPackage[];
+  packageExtras: ExtraPackage[];
 }
 
 export interface GetPackages {

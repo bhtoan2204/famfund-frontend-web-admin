@@ -12,7 +12,7 @@ import { Card, Col, Input, Pagination, Row, Statistic, Table } from "antd";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const FeedbackkPage = () => {
+const FeedbackPage = () => {
   const [feedbacks, setFeedbacks] = useState<FeedBack[]>([]);
   const [feedbackStats, setFeedbackStats] = useState<FeedbackStats | null>(
     null,
@@ -137,6 +137,7 @@ const FeedbackkPage = () => {
 
   return (
     <DefaultLayout>
+      <h1>Feedback</h1>
       <div>
         <Row gutter={16} className="mb-4">
           <Col span={6}>
@@ -187,4 +188,4 @@ const FeedbackkPage = () => {
   );
 };
 
-export default FeedbackkPage;
+export default FeedbackPage;

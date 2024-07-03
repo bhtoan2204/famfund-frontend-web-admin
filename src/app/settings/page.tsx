@@ -22,7 +22,7 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-
+import { message } from "antd";
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const getBase64 = (file: FileType): Promise<string> =>
@@ -66,8 +66,12 @@ const Settings = () => {
       });
       if (response.status === 200) {
         dispatch(setUser(response.data["0"]));
+        message.success("Profile updated successfully!");
+      } else {
+        message.error("Failed to update profile.");
       }
     } catch (error) {
+      message.error("Failed to update profile.");
       console.log(error);
     }
   };

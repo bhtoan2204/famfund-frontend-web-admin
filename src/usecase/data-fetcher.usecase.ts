@@ -38,8 +38,8 @@ export class DatafetcherUsecase {
     page: number;
     itemsPerPage: number;
     search: string | null;
-    sort: string | null;
-    packageId: number | null;
+    sortBy: string | null;
+    sortDirection: "ASC" | "DESC" | null;
   }) {
     try {
       const response = await this.datafetcherRepository.getUserOrders(dto);

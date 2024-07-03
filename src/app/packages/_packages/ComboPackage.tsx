@@ -214,11 +214,12 @@ export function ComboPackageTab() {
   };
 
   const handleEditButtonClick = (record: ComboPackage) => {
+    console.log(record);
     form.setFieldValue("name", record.name);
     form.setFieldValue("description", record.description);
-    form.setFieldValue("price", parseInt(record.price.slice(1)));
-    form.setFieldValue("id_package_extra", [
-      ...record.id_package_extra.map(
+    form.setFieldValue("price", record.price);
+    form.setFieldValue("packageExtras", [
+      ...record.packageExtras.map(
         (extraPackage) => extraPackage.id_extra_package,
       ),
     ]);
@@ -371,7 +372,7 @@ export function ComboPackageTab() {
             bordered
             column={1}
           >
-            {selectedCombo.id_package_extra.map((extraPackage) => (
+            {selectedCombo.packageExtras.map((extraPackage) => (
               <Descriptions.Item
                 label={extraPackage.name}
                 key={extraPackage.id_extra_package}
@@ -530,7 +531,7 @@ export function ComboPackageTab() {
           </Form.Item>
           <Form.Item
             label="Extra Packages (Multi-chosen)"
-            name="id_package_extra"
+            name="packageExtras"
             rules={[
               {
                 required: true,
