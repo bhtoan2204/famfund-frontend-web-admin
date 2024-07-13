@@ -48,4 +48,17 @@ export class DatafetcherUsecase {
       throw error;
     }
   }
+
+  async getOrsersStats(dto: {
+    startDate: string;
+    endDate: string;
+    interval: number;
+  }) {
+    try {
+      const response = await this.datafetcherRepository.getOrsersStats(dto);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

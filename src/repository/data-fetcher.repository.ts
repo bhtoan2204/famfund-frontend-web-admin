@@ -77,4 +77,28 @@ export class DataFetcherRepository {
       throw error;
     }
   }
+
+  async getOrsersStats(dto: {
+    startDate: string;
+    endDate: string;
+    interval: number;
+  }) {
+    try {
+      const response = await fetch(
+        `${this.backendUrl}/orderStatistics?startDate=${dto.startDate}&endDate=${dto.endDate}&interval=${dto.interval}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${getCookieCustom("accessToken")}`,
+          },
+        },
+      );
+      const data = await response.json();
+      return { data, status: response.status };
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -1,50 +1,50 @@
-"use client"
+"use client";
 
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { ProxyRepository } from "@/repository/proxy.repository";
 import { ProxyUsecase } from "@/usecase/proxy.usecase";
 import { useState, useEffect } from "react";
-import { Bar, Line, Pie } from 'react-chartjs-2';
-import { Chart, ChartData, registerables } from 'chart.js';
+import { Bar, Line, Pie } from "react-chartjs-2";
+import { Chart, ChartData, registerables } from "chart.js";
 import WorldMap from "react-svg-worldmap";
 import { DatePicker, Spin, Typography, message } from "antd";
 import dayjs from "dayjs";
-import 'chartjs-adapter-date-fns';
+import "chartjs-adapter-date-fns";
 
 Chart.register(...registerables);
 
 const backgroundColor = [
-  'rgba(255, 99, 132, 0.4)',
-  'rgba(54, 162, 235, 0.4)',
-  'rgba(255, 206, 86, 0.4)',
-  'rgba(75, 192, 192, 0.4)',
-  'rgba(153, 102, 255, 0.4)',
-  'rgba(255, 159, 64, 0.4)',
-  'rgba(255, 0, 0, 0.4)',
-  'rgba(0, 255, 0, 0.4)',
-  'rgba(0, 0, 255, 0.4)',
-  'rgba(128, 128, 128, 0.4)',
-  'rgba(0, 255, 255, 0.4)',
-  'rgba(255, 0, 255, 0.4)',
-  'rgba(128, 0, 128, 0.4)',
-  'rgba(255, 165, 0, 0.4)',
-  'rgba(0, 128, 0, 0.4)',
-  'rgba(0, 0, 128, 0.4)',
-  'rgba(128, 0, 0, 0.4)',
-  'rgba(0, 128, 128, 0.4)',
-  'rgba(255, 255, 0, 0.4)',
-  'rgba(255, 255, 255, 0.4)',
-  'rgba(0, 0, 0, 0.4)',
-  'rgba(128, 128, 0, 0.4)',
-  'rgba(192, 192, 192, 0.4)',
-  'rgba(255, 140, 0, 0.4)',
-  'rgba(0, 255, 255, 0.4)',
-  'rgba(255, 0, 255, 0.4)',
-  'rgba(0, 255, 0, 0.4)',
-  'rgba(255, 255, 255, 0.4)',
-  'rgba(0, 0, 0, 0.4)',
-  'rgba(255, 255, 255, 0.4)',
-]
+  "rgba(255, 99, 132, 0.4)",
+  "rgba(54, 162, 235, 0.4)",
+  "rgba(255, 206, 86, 0.4)",
+  "rgba(75, 192, 192, 0.4)",
+  "rgba(153, 102, 255, 0.4)",
+  "rgba(255, 159, 64, 0.4)",
+  "rgba(255, 0, 0, 0.4)",
+  "rgba(0, 255, 0, 0.4)",
+  "rgba(0, 0, 255, 0.4)",
+  "rgba(128, 128, 128, 0.4)",
+  "rgba(0, 255, 255, 0.4)",
+  "rgba(255, 0, 255, 0.4)",
+  "rgba(128, 0, 128, 0.4)",
+  "rgba(255, 165, 0, 0.4)",
+  "rgba(0, 128, 0, 0.4)",
+  "rgba(0, 0, 128, 0.4)",
+  "rgba(128, 0, 0, 0.4)",
+  "rgba(0, 128, 128, 0.4)",
+  "rgba(255, 255, 0, 0.4)",
+  "rgba(255, 255, 255, 0.4)",
+  "rgba(0, 0, 0, 0.4)",
+  "rgba(128, 128, 0, 0.4)",
+  "rgba(192, 192, 192, 0.4)",
+  "rgba(255, 140, 0, 0.4)",
+  "rgba(0, 255, 255, 0.4)",
+  "rgba(255, 0, 255, 0.4)",
+  "rgba(0, 255, 0, 0.4)",
+  "rgba(255, 255, 255, 0.4)",
+  "rgba(0, 0, 0, 0.4)",
+  "rgba(255, 255, 255, 0.4)",
+];
 
 interface Requests {
   date: string;
@@ -87,7 +87,7 @@ interface BrowserMap {
     {
       pageViews: number;
       uaBrowserFamily: string;
-    }
+    },
   ];
 }
 
@@ -98,7 +98,7 @@ interface ContentTypeMap {
       bytes: number;
       edgeResponseContentTypeName: string;
       requests: number;
-    }
+    },
   ];
 }
 
@@ -110,7 +110,7 @@ interface CountryMap {
       clientCountryName: string;
       requests: number;
       threats: number;
-    }
+    },
   ];
 }
 
@@ -120,7 +120,7 @@ interface ResponseStatusMap {
     {
       requests: number;
       edgeResponseStatus: number;
-    }
+    },
   ];
 }
 
@@ -148,36 +148,36 @@ const CombinedChart: React.FC<CombinedChartProps> = ({
   encryptedBytes,
   encryptedRequests,
 }) => {
-  const labels = requests.map(item => item.date);
+  const labels = requests.map((item) => item.date);
   const requestsData = {
     labels: labels,
     datasets: [
       {
-        label: 'Requests',
-        data: requests.map(item => item.requests),
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.4)',
+        label: "Requests",
+        data: requests.map((item) => item.requests),
+        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(75, 192, 192, 0.4)",
         fill: false,
       },
       {
-        label: 'Cached Requests',
-        data: cachedRequests.map(item => item.cachedRequests),
-        borderColor: 'rgba(153, 102, 255, 1)',
-        backgroundColor: 'rgba(153, 102, 255, 0.4)',
+        label: "Cached Requests",
+        data: cachedRequests.map((item) => item.cachedRequests),
+        borderColor: "rgba(153, 102, 255, 1)",
+        backgroundColor: "rgba(153, 102, 255, 0.4)",
         fill: false,
       },
       {
-        label: 'Threats',
-        data: threats.map(item => item.threats),
-        borderColor: 'rgba(255, 99, 132, 1)',
-        backgroundColor: 'rgba(255, 99, 132, 0.4)',
+        label: "Threats",
+        data: threats.map((item) => item.threats),
+        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 99, 132, 0.4)",
         fill: false,
       },
       {
-        label: 'Encrypted Requests',
-        data: encryptedRequests.map(item => item.encryptedRequests),
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.4)',
+        label: "Encrypted Requests",
+        data: encryptedRequests.map((item) => item.encryptedRequests),
+        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(75, 192, 192, 0.4)",
         fill: false,
       },
     ],
@@ -187,24 +187,24 @@ const CombinedChart: React.FC<CombinedChartProps> = ({
     labels: labels,
     datasets: [
       {
-        label: 'Bytes',
-        data: bytes.map(item => item.bytes),
-        borderColor: 'rgba(255, 159, 64, 1)',
-        backgroundColor: 'rgba(255, 159, 64, 0.4)',
+        label: "Bytes",
+        data: bytes.map((item) => item.bytes),
+        borderColor: "rgba(255, 159, 64, 1)",
+        backgroundColor: "rgba(255, 159, 64, 0.4)",
         fill: false,
       },
       {
-        label: 'Cached Bytes',
-        data: cachedBytes.map(item => item.cachedBytes),
-        borderColor: 'rgba(54, 162, 235, 1)',
-        backgroundColor: 'rgba(54, 162, 235, 0.4)',
+        label: "Cached Bytes",
+        data: cachedBytes.map((item) => item.cachedBytes),
+        borderColor: "rgba(54, 162, 235, 1)",
+        backgroundColor: "rgba(54, 162, 235, 0.4)",
         fill: false,
       },
       {
-        label: 'Encrypted Bytes',
-        data: encryptedBytes.map(item => item.encryptedBytes),
-        borderColor: 'rgba(255, 206, 86, 1)',
-        backgroundColor: 'rgba(255, 206, 86, 0.4)',
+        label: "Encrypted Bytes",
+        data: encryptedBytes.map((item) => item.encryptedBytes),
+        borderColor: "rgba(255, 206, 86, 1)",
+        backgroundColor: "rgba(255, 206, 86, 0.4)",
         fill: false,
       },
     ],
@@ -214,11 +214,11 @@ const CombinedChart: React.FC<CombinedChartProps> = ({
     responsive: true,
     plugins: {
       legend: {
-        position: 'top' as const,
+        position: "top" as const,
       },
       title: {
         display: true,
-        text: 'Data Over Time',
+        text: "Data Over Time",
       },
     },
   };
@@ -237,29 +237,32 @@ const CombinedChart: React.FC<CombinedChartProps> = ({
   );
 };
 
-const WorldMapComponent: React.FC<{ countryMap: CountryMap[] }> = ({ countryMap }) => {
-  const data = countryMap.flatMap((item) => item.countryMap).reduce<
-    { country: string; value: number }[]
-  >((acc, current) => {
-    const existingCountry = acc.find(
-      (item) => item.country === current.clientCountryName
-    );
-    if (existingCountry) {
-      existingCountry.value += current.requests;
-    } else {
-      acc.push({
-        country: current.clientCountryName,
-        value: current.requests,
-      });
-    }
-    return acc;
-  }, []).sort((a, b) => b.value - a.value);
+const WorldMapComponent: React.FC<{ countryMap: CountryMap[] }> = ({
+  countryMap,
+}) => {
+  const data = countryMap
+    .flatMap((item) => item.countryMap)
+    .reduce<{ country: string; value: number }[]>((acc, current) => {
+      const existingCountry = acc.find(
+        (item) => item.country === current.clientCountryName,
+      );
+      if (existingCountry) {
+        existingCountry.value += current.requests;
+      } else {
+        acc.push({
+          country: current.clientCountryName,
+          value: current.requests,
+        });
+      }
+      return acc;
+    }, [])
+    .sort((a, b) => b.value - a.value);
 
   return (
     <div className="flex border">
-      <div className="w-3/4 mb-8 rounded-md p-4">
+      <div className="mb-8 w-3/4 rounded-md p-4">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <h2 className="text-gray-800 mb-4 text-2xl font-bold">
             🌍 Requests by Country in the last 30 days
           </h2>
           <WorldMap
@@ -271,35 +274,35 @@ const WorldMapComponent: React.FC<{ countryMap: CountryMap[] }> = ({ countryMap 
           />
         </div>
       </div>
-      <div className="w-1/4 mb-8 rounded-md p-4">
+      <div className="mb-8 w-1/4 rounded-md p-4">
         <h2 className="text-xl font-bold">Top Countries by Requests</h2>
-        <div style={{ maxHeight: '900px', overflowY: 'auto' }}>
-          <table className="min-w-full divide-y divide-gray-200">
+        <div style={{ maxHeight: "900px", overflowY: "auto" }}>
+          <table className="divide-gray-200 min-w-full divide-y">
             <thead className="bg-gray-50">
               <tr>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="text-gray-500 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                 >
                   Country/Region
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="text-gray-500 px-6 py-3 text-right text-xs font-medium uppercase tracking-wider"
                 >
                   Traffics
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-gray-200 divide-y bg-white">
               {data.map((item, index) => (
                 <tr key={index}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
+                  <td className="whitespace-nowrap px-6 py-4">
+                    <div className="text-gray-900 text-sm font-medium">
                       {item.country}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                  <td className="text-gray-500 whitespace-nowrap px-6 py-4 text-right text-sm">
                     {item.value}
                   </td>
                 </tr>
@@ -310,7 +313,7 @@ const WorldMapComponent: React.FC<{ countryMap: CountryMap[] }> = ({ countryMap 
       </div>
     </div>
   );
-}
+};
 
 interface PieChartProps {
   browserMap: BrowserMap[];
@@ -323,52 +326,74 @@ const PieChartCombined: React.FC<PieChartProps> = ({
   contentTypeMap,
   responseStatusMap,
 }) => {
-  const browserData = browserMap.reduce((acc, item) => {
-    item.browserMap.forEach(browser => {
-      const existingBrowser = acc.find(b => b.uaBrowserFamily === browser.uaBrowserFamily);
-      if (existingBrowser) {
-        existingBrowser.pageViews += browser.pageViews;
-      } else {
-        acc.push({
-          uaBrowserFamily: browser.uaBrowserFamily,
-          pageViews: browser.pageViews,
-        });
-      }
-    });
-    return acc;
-  }, [] as { uaBrowserFamily: string; pageViews: number }[]);
+  const browserData = browserMap.reduce(
+    (acc, item) => {
+      item.browserMap.forEach((browser) => {
+        const existingBrowser = acc.find(
+          (b) => b.uaBrowserFamily === browser.uaBrowserFamily,
+        );
+        if (existingBrowser) {
+          existingBrowser.pageViews += browser.pageViews;
+        } else {
+          acc.push({
+            uaBrowserFamily: browser.uaBrowserFamily,
+            pageViews: browser.pageViews,
+          });
+        }
+      });
+      return acc;
+    },
+    [] as { uaBrowserFamily: string; pageViews: number }[],
+  );
 
-  const contentTypeData = contentTypeMap.reduce((acc, item) => {
-    item.contentTypeMap.forEach(contentType => {
-      const existingContentType = acc.find(c => c.edgeResponseContentTypeName === contentType.edgeResponseContentTypeName);
-      if (existingContentType) {
-        existingContentType.bytes += contentType.bytes;
-        existingContentType.requests += contentType.requests;
-      } else {
-        acc.push({
-          edgeResponseContentTypeName: contentType.edgeResponseContentTypeName,
-          bytes: contentType.bytes,
-          requests: contentType.requests,
-        });
-      }
-    });
-    return acc;
-  }, [] as { edgeResponseContentTypeName: string; bytes: number; requests: number }[]);
+  const contentTypeData = contentTypeMap.reduce(
+    (acc, item) => {
+      item.contentTypeMap.forEach((contentType) => {
+        const existingContentType = acc.find(
+          (c) =>
+            c.edgeResponseContentTypeName ===
+            contentType.edgeResponseContentTypeName,
+        );
+        if (existingContentType) {
+          existingContentType.bytes += contentType.bytes;
+          existingContentType.requests += contentType.requests;
+        } else {
+          acc.push({
+            edgeResponseContentTypeName:
+              contentType.edgeResponseContentTypeName,
+            bytes: contentType.bytes,
+            requests: contentType.requests,
+          });
+        }
+      });
+      return acc;
+    },
+    [] as {
+      edgeResponseContentTypeName: string;
+      bytes: number;
+      requests: number;
+    }[],
+  );
 
-  const responseStatusData = responseStatusMap.reduce((acc, item) => {
-    item.responseStatusMap.forEach(responseStatus => {
-      const existingResponseStatus = acc.find(r => r.edgeResponseStatus === responseStatus.edgeResponseStatus);
-      if (existingResponseStatus) {
-        existingResponseStatus.requests += responseStatus.requests;
-      } else {
-        acc.push({
-          edgeResponseStatus: responseStatus.edgeResponseStatus,
-          requests: responseStatus.requests,
-        });
-      }
-    });
-    return acc;
-  }, [] as { edgeResponseStatus: number; requests: number }[]);
+  const responseStatusData = responseStatusMap.reduce(
+    (acc, item) => {
+      item.responseStatusMap.forEach((responseStatus) => {
+        const existingResponseStatus = acc.find(
+          (r) => r.edgeResponseStatus === responseStatus.edgeResponseStatus,
+        );
+        if (existingResponseStatus) {
+          existingResponseStatus.requests += responseStatus.requests;
+        } else {
+          acc.push({
+            edgeResponseStatus: responseStatus.edgeResponseStatus,
+            requests: responseStatus.requests,
+          });
+        }
+      });
+      return acc;
+    },
+    [] as { edgeResponseStatus: number; requests: number }[],
+  );
 
   const browserChartData = {
     labels: browserData.map((item) => item.uaBrowserFamily),
@@ -376,7 +401,13 @@ const PieChartCombined: React.FC<PieChartProps> = ({
       {
         data: browserData.map((item) => item.pageViews),
         backgroundColor: backgroundColor,
-        percentage: browserData.map((item) => Math.round((item.pageViews / browserData.reduce((sum, i) => sum + i.pageViews, 0)) * 100))
+        percentage: browserData.map((item) =>
+          Math.round(
+            (item.pageViews /
+              browserData.reduce((sum, i) => sum + i.pageViews, 0)) *
+              100,
+          ),
+        ),
       },
     ],
   };
@@ -387,34 +418,45 @@ const PieChartCombined: React.FC<PieChartProps> = ({
       {
         data: contentTypeData.map((item) => item.bytes),
         backgroundColor: backgroundColor,
-        percentage: contentTypeData.map((item) => Math.round((item.bytes / contentTypeData.reduce((sum, i) => sum + i.bytes, 0)) * 100))
+        percentage: contentTypeData.map((item) =>
+          Math.round(
+            (item.bytes /
+              contentTypeData.reduce((sum, i) => sum + i.bytes, 0)) *
+              100,
+          ),
+        ),
       },
     ],
   };
 
   const responseStatusChartData = {
-    labels: responseStatusData.map(
-      (item) => item.edgeResponseStatus
-    ),
+    labels: responseStatusData.map((item) => item.edgeResponseStatus),
     datasets: [
       {
         data: responseStatusData.map((item) => item.requests),
         backgroundColor: backgroundColor,
-        percentage: responseStatusData.map((item) => Math.round((item.requests / responseStatusData.reduce((sum, i) => sum + i.requests, 0)) * 100))
+        percentage: responseStatusData.map((item) =>
+          Math.round(
+            (item.requests /
+              responseStatusData.reduce((sum, i) => sum + i.requests, 0)) *
+              100,
+          ),
+        ),
       },
     ],
   };
 
   return (
     <div className="flex flex-row gap-4">
-      <div className="w-1/3 m-5">
+      <div className="m-5 w-1/3">
         <h2 className="text-xl font-bold">🌐 Browser</h2>
-        <Pie data={browserChartData}
+        <Pie
+          data={browserChartData}
           options={{
             plugins: {
               legend: {
                 display: true,
-                position: 'bottom',
+                position: "bottom",
                 labels: {
                   padding: 20,
                   usePointStyle: true,
@@ -424,25 +466,30 @@ const PieChartCombined: React.FC<PieChartProps> = ({
               tooltip: {
                 callbacks: {
                   label: (context) => {
-                    const label = context.label || '';
+                    const label = context.label || "";
                     const value = context.parsed;
-                    const total = context.dataset.data.reduce((sum, i) => sum + i, 0);
+                    const total = context.dataset.data.reduce(
+                      (sum, i) => sum + i,
+                      0,
+                    );
                     const percentage = Math.round((value / total) * 100);
                     return `${label}: ${value} (${percentage}%)`;
                   },
                 },
               },
             },
-          }} />
+          }}
+        />
       </div>
-      <div className="w-1/3 m-5">
+      <div className="m-5 w-1/3">
         <h2 className="text-xl font-bold">✍️ Content Type</h2>
-        <Pie data={contentTypeChartData}
+        <Pie
+          data={contentTypeChartData}
           options={{
             plugins: {
               legend: {
                 display: true,
-                position: 'bottom',
+                position: "bottom",
                 labels: {
                   padding: 20,
                   usePointStyle: true,
@@ -452,25 +499,30 @@ const PieChartCombined: React.FC<PieChartProps> = ({
               tooltip: {
                 callbacks: {
                   label: (context) => {
-                    const label = context.label || '';
+                    const label = context.label || "";
                     const value = context.parsed;
-                    const total = context.dataset.data.reduce((sum, i) => sum + i, 0);
+                    const total = context.dataset.data.reduce(
+                      (sum, i) => sum + i,
+                      0,
+                    );
                     const percentage = Math.round((value / total) * 100);
                     return `${label}: ${value} (${percentage}%)`;
                   },
                 },
               },
             },
-          }} />
+          }}
+        />
       </div>
-      <div className="w-1/3 m-5">
+      <div className="m-5 w-1/3">
         <h2 className="text-xl font-bold">🫀 Response Status</h2>
-        <Pie data={responseStatusChartData}
+        <Pie
+          data={responseStatusChartData}
           options={{
             plugins: {
               legend: {
                 display: true,
-                position: 'bottom',
+                position: "bottom",
                 labels: {
                   padding: 20,
                   usePointStyle: true,
@@ -480,50 +532,56 @@ const PieChartCombined: React.FC<PieChartProps> = ({
               tooltip: {
                 callbacks: {
                   label: (context) => {
-                    const label = context.label || '';
+                    const label = context.label || "";
                     const value = context.parsed;
-                    const total = context.dataset.data.reduce((sum, i) => sum + i, 0);
+                    const total = context.dataset.data.reduce(
+                      (sum, i) => sum + i,
+                      0,
+                    );
                     const percentage = Math.round((value / total) * 100);
                     return `${label}: ${value} (${percentage}%)`;
                   },
                 },
               },
             },
-          }} />
+          }}
+        />
       </div>
     </div>
-  )
+  );
 };
 
 const UniquesChart: React.FC<{ uniques: Uniques[] }> = ({ uniques }) => {
   const dataSet: ChartData<"bar", number[], string> = {
-    labels: uniques.map(item => item.date),
+    labels: uniques.map((item) => item.date),
     datasets: [
       {
-        data: uniques.map(item => item.uniques),
-        backgroundColor: 'rgba(75,192,192,1)',
-        borderColor: 'rgba(75,192,192,1)',
+        data: uniques.map((item) => item.uniques),
+        backgroundColor: "rgba(75,192,192,1)",
+        borderColor: "rgba(75,192,192,1)",
       },
     ],
   };
   const options = {
     plugins: {
       legend: {
-        display: false
-      }
-    }
+        display: false,
+      },
+    },
   };
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-700 mb-4">🧑‍💻Unique Users Chart</h2>
+      <h2 className="text-gray-700 mb-4 text-2xl font-bold">
+        🧑‍💻Unique Users Chart
+      </h2>
       <Bar data={dataSet} options={options} />
     </div>
-  )
+  );
 };
 
 const ProxyPage = () => {
   const logsUseCase = new ProxyUsecase(new ProxyRepository());
-  const [date_geq, setDate_geq] = useState(dayjs().subtract(30, 'day'));
+  const [date_geq, setDate_geq] = useState(dayjs().subtract(30, "day"));
   const [date_leq, setDate_leq] = useState(dayjs());
   const [limit, setLimit] = useState(30);
   const [request, setRequest] = useState<Requests[]>([]);
@@ -532,18 +590,26 @@ const ProxyPage = () => {
   const [cachedBytes, setCachedBytes] = useState<CachedBytes[]>([]);
   const [threats, setThreats] = useState<Threats[]>([]);
   const [encryptedBytes, setEncryptedBytes] = useState<EncryptedBytes[]>([]);
-  const [encryptedRequests, setEncryptedRequests] = useState<EncryptedRequests[]>([]);
+  const [encryptedRequests, setEncryptedRequests] = useState<
+    EncryptedRequests[]
+  >([]);
   const [countryMap, setCountryMap] = useState<CountryMap[]>([]);
   const [browserMap, setBrowserMap] = useState<BrowserMap[]>([]);
   const [contentTypeMap, setContentTypeMap] = useState<ContentTypeMap[]>([]);
-  const [responseStatusMap, setResponseStatusMap] = useState<ResponseStatusMap[]>([]);
+  const [responseStatusMap, setResponseStatusMap] = useState<
+    ResponseStatusMap[]
+  >([]);
   const [uniques, setUniques] = useState<Uniques[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getProxyAnalytics = async () => {
     setIsLoading(true);
     try {
-      const response = await logsUseCase.getAnalytics(date_geq.format('YYYY-MM-DD'), date_leq.format('YYYY-MM-DD'), limit);
+      const response = await logsUseCase.getAnalytics(
+        date_geq.format("YYYY-MM-DD"),
+        date_leq.format("YYYY-MM-DD"),
+        limit,
+      );
       if (response.status !== 200) throw new Error(response.data.message);
       else {
         const data = response.data.viewer.zones[0].httpRequests1dGroups;
@@ -625,8 +691,7 @@ const ProxyPage = () => {
       }
     } catch (error) {
       console.error(error);
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -636,25 +701,31 @@ const ProxyPage = () => {
     return Math.floor(differenceInTime / (1000 * 3600 * 24));
   };
 
-  const handleDateChange = (date: dayjs.Dayjs | null, type: 'geq' | 'leq') => {
+  const handleDateChange = (date: dayjs.Dayjs | null, type: "geq" | "leq") => {
     if (date) {
-      const newDateString = date.format('YYYY-MM-DD');
-      const startDate = type === 'geq' ? new Date(newDateString) : new Date(date_geq.format('YYYY-MM-DD'));
-      const endDate = type === 'leq' ? new Date(newDateString) : new Date(date_leq.format('YYYY-MM-DD'));
+      const newDateString = date.format("YYYY-MM-DD");
+      const startDate =
+        type === "geq"
+          ? new Date(newDateString)
+          : new Date(date_geq.format("YYYY-MM-DD"));
+      const endDate =
+        type === "leq"
+          ? new Date(newDateString)
+          : new Date(date_leq.format("YYYY-MM-DD"));
 
       if (endDate < startDate) {
-        message.error('End date must be greater than start date', 3);
+        message.error("End date must be greater than start date", 3);
         return;
       }
 
       const differenceInDays = calculateDateDifference(startDate, endDate);
 
       if (differenceInDays > 394) {
-        message.warning('Maximum date difference must lower than 394 days', 3);
+        message.warning("Maximum date difference must lower than 394 days", 3);
         return;
       }
 
-      if (type === 'geq') {
+      if (type === "geq") {
         setDate_geq(date);
       } else {
         setDate_leq(date);
@@ -666,43 +737,43 @@ const ProxyPage = () => {
 
   useEffect(() => {
     getProxyAnalytics();
-  }, [limit, date_geq, date_leq])
+  }, [limit, date_geq, date_leq]);
 
   return (
     <DefaultLayout>
-      <Typography.Title level={2}>Proxy Statistics</Typography.Title>
+      <Typography.Title>Proxy</Typography.Title>
       <Spin spinning={isLoading}>
         <div className="flex flex-col gap-8">
-          <div className="stickyDatepicker top-0 z-10 flex items-center gap-4 bg-gray-100 p-4 rounded-md">
+          <div className="stickyDatepicker bg-gray-100 top-0 z-10 flex items-center gap-4 rounded-md p-4">
             <DatePicker
               value={date_geq}
-              onChange={(date) => handleDateChange(date, 'geq')}
+              onChange={(date) => handleDateChange(date, "geq")}
               format="YYYY-MM-DD"
-              className="w-full border border-gray-300 rounded-md"
+              className="border-gray-300 w-full rounded-md border"
               contentEditable="false"
             />
-            <span className="font-bold text-gray-600">to</span>
+            <span className="text-gray-600 font-bold">to</span>
             <DatePicker
               value={date_leq}
-              onChange={(date) => handleDateChange(date, 'leq')}
+              onChange={(date) => handleDateChange(date, "leq")}
               format="YYYY-MM-DD"
-              className="w-full border border-gray-300 rounded-md"
+              className="border-gray-300 w-full rounded-md border"
               contentEditable="false"
             />
           </div>
-          <div className="p-4 rounded-md">
+          <div className="rounded-md p-4">
             <UniquesChart uniques={uniques} />
           </div>
-          <hr className="my-4 border-t-1 border-gray-800 w-2/4 mx-auto" />
-          <div className="p-4 rounded-md">
+          <hr className="border-t-1 border-gray-800 mx-auto my-4 w-2/4" />
+          <div className="rounded-md p-4">
             <PieChartCombined
               browserMap={browserMap}
               contentTypeMap={contentTypeMap}
-              responseStatusMap={responseStatusMap}>
-            </PieChartCombined>
+              responseStatusMap={responseStatusMap}
+            ></PieChartCombined>
           </div>
-          <hr className="my-4 border-t-1 border-gray-300 w-2/4 mx-auto" />
-          <div className="p-4 rounded-md">
+          <hr className="border-t-1 border-gray-300 mx-auto my-4 w-2/4" />
+          <div className="rounded-md p-4">
             <CombinedChart
               requests={request}
               cachedRequests={cachedRequests}
@@ -710,17 +781,17 @@ const ProxyPage = () => {
               cachedBytes={cachedBytes}
               threats={threats}
               encryptedBytes={encryptedBytes}
-              encryptedRequests={encryptedRequests}>
-            </CombinedChart>
+              encryptedRequests={encryptedRequests}
+            ></CombinedChart>
           </div>
-          <hr className="my-4 border-t-1 border-gray-800 w-2/4 mx-auto" />
-          <div className="p-4 rounded-md">
+          <hr className="border-t-1 border-gray-800 mx-auto my-4 w-2/4" />
+          <div className="rounded-md p-4">
             <WorldMapComponent countryMap={countryMap} />
           </div>
         </div>
       </Spin>
     </DefaultLayout>
   );
-}
+};
 
 export default ProxyPage;

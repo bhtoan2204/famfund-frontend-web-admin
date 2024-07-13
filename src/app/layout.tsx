@@ -4,7 +4,7 @@ import "@/css/satoshi.css";
 import "@/css/style.css";
 import ReduxProvider from "@/redux/redux-provider";
 import "flatpickr/dist/flatpickr.min.css";
-import "jsvectormap/dist/css/jsvectormap.css";
+// import "jsvectormap/dist/css/jsvectormap.css";
 import React, { useEffect, useState } from "react";
 
 export default function RootLayout({
@@ -12,7 +12,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {

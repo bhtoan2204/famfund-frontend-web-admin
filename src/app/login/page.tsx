@@ -1,11 +1,11 @@
 "use client";
 
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { AuthUseCase } from "@/usecase/auth.usecase";
 import { AuthRepository } from "@/repository/user.repository";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 import { setUser } from "@/redux/slices/user.slices";
 import { ProfileUseCase } from "@/usecase/profile.usecase";
 import { ProfileRepository } from "@/repository/profile.repository";

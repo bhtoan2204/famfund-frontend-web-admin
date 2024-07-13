@@ -5,11 +5,22 @@ import { DataFetcherRepository } from "@/repository/data-fetcher.repository";
 import { DatabaseStatRepository } from "@/repository/database-stat.repository";
 import { DatafetcherUsecase } from "@/usecase/data-fetcher.usecase";
 import { DatabaseStatUsecase } from "@/usecase/database-stat.usecase";
-import { Button, Card, Col, Descriptions, Input, Modal, Row, Spin, Table, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Descriptions,
+  Input,
+  Modal,
+  Row,
+  Spin,
+  Table,
+  Typography,
+} from "antd";
 import { useEffect, useState } from "react";
 
 interface TableSize {
-  "Table": string;
+  Table: string;
   "Total Size (KB)": string;
   "Table Size (KB)": string;
   "Index Size (KB)": string;
@@ -18,15 +29,15 @@ interface TableSize {
 }
 
 interface ActiveSession {
-  "pid": number,
-  "usename": string,
-  "datname": string,
-  "client_addr": string,
-  "client_port": number,
-  "backend_start": string,
-  "state": string,
-  "query_start": string,
-  "state_change": string
+  pid: number;
+  usename: string;
+  datname: string;
+  client_addr: string;
+  client_port: number;
+  backend_start: string;
+  state: string;
+  query_start: string;
+  state_change: string;
 }
 
 interface MongoStat {
@@ -83,14 +94,20 @@ interface IPData {
 }
 
 const DatabasePage = () => {
-  const databaseStatUsecase = new DatabaseStatUsecase(new DatabaseStatRepository());
-  const datafetcherUsecase = new DatafetcherUsecase(new DataFetcherRepository());
+  const databaseStatUsecase = new DatabaseStatUsecase(
+    new DatabaseStatRepository(),
+  );
+  const datafetcherUsecase = new DatafetcherUsecase(
+    new DataFetcherRepository(),
+  );
   const [postgreTableSize, setPostgreTableSize] = useState<TableSize[]>([]);
-  const [postgreActiveSession, setPostgreActiveSession] = useState<ActiveSession[]>([]);
+  const [postgreActiveSession, setPostgreActiveSession] = useState<
+    ActiveSession[]
+  >([]);
   const [mongoStat, setMongoStat] = useState<MongoStat[]>([]);
   const [isPostgreLoading, setIsPostgreLoading] = useState<boolean>(false);
   const [isMongoLoading, setIsMongoLoading] = useState<boolean>(false);
-  
+
   const getPostgresqlData = async () => {
     try {
       const response = await databaseStatUsecase.getPostgresql();
@@ -98,28 +115,23 @@ const DatabasePage = () => {
         setPostgreTableSize(response.data.table_size);
         setPostgreActiveSession(response.data.active_sessions);
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
-    }
-    finally {
+    } finally {
       setIsPostgreLoading(false);
     }
-  }
+  };
 
   const getMongoStat = async () => {
     try {
       const response = await databaseStatUsecase.getMongoDB();
       setMongoStat(response.data);
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
-    }
-    finally {
+    } finally {
       setIsMongoLoading(false);
     }
-
-  }
+  };
 
   useEffect(() => {
     setIsPostgreLoading(true);
@@ -129,36 +141,40 @@ const DatabasePage = () => {
   }, []);
 
   const tableSizeColumns = [
-    { title: 'Table', dataIndex: 'Table', key: 'Table' },
+    { title: "Table", dataIndex: "Table", key: "Table" },
     {
-      title: 'Total Size (KB)',
-      dataIndex: 'Total Size (KB)',
-      key: 'Total Size (KB)',
+      title: "Total Size (KB)",
+      dataIndex: "Total Size (KB)",
+      key: "Total Size (KB)",
     },
     {
-      title: 'Table Size (KB)',
-      dataIndex: 'Table Size (KB)',
-      key: 'Table Size (KB)',
+      title: "Table Size (KB)",
+      dataIndex: "Table Size (KB)",
+      key: "Table Size (KB)",
     },
     {
-      title: 'Index Size (KB)',
-      dataIndex: 'Index Size (KB)',
-      key: 'Index Size (KB)',
+      title: "Index Size (KB)",
+      dataIndex: "Index Size (KB)",
+      key: "Index Size (KB)",
     },
-    { title: 'Live Tuples', dataIndex: 'Live Tuples', key: 'Live Tuples' },
-    { title: 'Dead Tuples', dataIndex: 'Dead Tuples', key: 'Dead Tuples' },
+    { title: "Live Tuples", dataIndex: "Live Tuples", key: "Live Tuples" },
+    { title: "Dead Tuples", dataIndex: "Dead Tuples", key: "Dead Tuples" },
   ];
 
   const activeSessionColumns = [
-    { title: 'PID', dataIndex: 'pid', key: 'pid' },
-    { title: 'Username', dataIndex: 'usename', key: 'usename' },
-    { title: 'Database', dataIndex: 'datname', key: 'datname' },
-    { title: 'Client Address', dataIndex: 'client_addr', key: 'client_addr' },
-    { title: 'Client Port', dataIndex: 'client_port', key: 'client_port' },
-    { title: 'Backend Start', dataIndex: 'backend_start', key: 'backend_start' },
-    { title: 'State', dataIndex: 'state', key: 'state' },
-    { title: 'Query Start', dataIndex: 'query_start', key: 'query_start' },
-    { title: 'State Change', dataIndex: 'state_change', key: 'state_change' },
+    { title: "PID", dataIndex: "pid", key: "pid" },
+    { title: "Username", dataIndex: "usename", key: "usename" },
+    { title: "Database", dataIndex: "datname", key: "datname" },
+    { title: "Client Address", dataIndex: "client_addr", key: "client_addr" },
+    { title: "Client Port", dataIndex: "client_port", key: "client_port" },
+    {
+      title: "Backend Start",
+      dataIndex: "backend_start",
+      key: "backend_start",
+    },
+    { title: "State", dataIndex: "state", key: "state" },
+    { title: "Query Start", dataIndex: "query_start", key: "query_start" },
+    { title: "State Change", dataIndex: "state_change", key: "state_change" },
     {
       title: "Actions",
       key: "actions",
@@ -177,7 +193,7 @@ const DatabasePage = () => {
   };
 
   const filteredData = postgreTableSize.filter((record) =>
-    record["Table"].toLowerCase().includes(searchText.toLowerCase())
+    record["Table"].toLowerCase().includes(searchText.toLowerCase()),
   );
 
   const [ipData, setIPData] = useState<IPData>({
@@ -229,18 +245,16 @@ const DatabasePage = () => {
         <Spin />
       </DefaultLayout>
     );
-  }
-
-  else if (isPostgreLoading) {
+  } else if (isPostgreLoading) {
     return (
       <DefaultLayout>
         <Spin />
       </DefaultLayout>
     );
-  }
-  else {
+  } else {
     return (
       <DefaultLayout>
+        <Typography.Title>Database</Typography.Title>
         <Modal
           title={`IPData Information for ${selectedIP}`}
           open={isModalVisible}
@@ -253,9 +267,7 @@ const DatabasePage = () => {
               <Descriptions.Item label="IP Address">
                 {ipData.query}
               </Descriptions.Item>
-              <Descriptions.Item label="City">
-                {ipData.city}
-              </Descriptions.Item>
+              <Descriptions.Item label="City">{ipData.city}</Descriptions.Item>
               <Descriptions.Item label="Region">
                 {ipData.regionName}
               </Descriptions.Item>
@@ -271,22 +283,17 @@ const DatabasePage = () => {
               <Descriptions.Item label="Timezone">
                 {ipData.timezone}
               </Descriptions.Item>
-              <Descriptions.Item label="ISP">
-                {ipData.isp}
-              </Descriptions.Item>
+              <Descriptions.Item label="ISP">{ipData.isp}</Descriptions.Item>
               <Descriptions.Item label="Organization">
                 {ipData.org}
               </Descriptions.Item>
-              <Descriptions.Item label="AS">
-                {ipData.as}
-              </Descriptions.Item>
+              <Descriptions.Item label="AS">{ipData.as}</Descriptions.Item>
             </Descriptions>
           ) : (
             <Spin />
           )}
         </Modal>
         <div>
-          <Typography.Title level={2}>Database Statistics</Typography.Title>
           <Typography.Title level={3}>MongoDB Stats</Typography.Title>
           {isMongoLoading ? (
             <Spin />
@@ -320,7 +327,9 @@ const DatabasePage = () => {
               </Row>
             </div>
           )}
-          <Typography.Title className="mt-10" level={3}>PostgreSQL Table Size</Typography.Title>
+          <Typography.Title className="mt-10" level={3}>
+            PostgreSQL Table Size
+          </Typography.Title>
           {isPostgreLoading ? (
             <Spin />
           ) : (
@@ -330,11 +339,13 @@ const DatabasePage = () => {
                 onSearch={handleSearch}
                 style={{ width: 300, marginBottom: 16 }}
               />
-              <Table dataSource={filteredData}
+              <Table
+                dataSource={filteredData}
                 columns={tableSizeColumns}
                 rowKey={(record: any) => {
-                  return record["Table"]
-                }} />
+                  return record["Table"];
+                }}
+              />
             </div>
           )}
           <Typography.Title level={3}>
@@ -347,7 +358,7 @@ const DatabasePage = () => {
               dataSource={postgreActiveSession}
               columns={activeSessionColumns}
               rowKey={(record: ActiveSession) => {
-                return `${record.pid + record.client_addr + record.client_port}`
+                return `${record.pid + record.client_addr + record.client_port}`;
               }}
             />
           )}
@@ -355,6 +366,6 @@ const DatabasePage = () => {
       </DefaultLayout>
     );
   }
-}
+};
 
 export default DatabasePage;

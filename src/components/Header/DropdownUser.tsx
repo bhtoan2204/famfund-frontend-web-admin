@@ -4,6 +4,7 @@ import { userLogout } from "@/redux/slices/user.slices";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { AuthRepository } from "@/repository/user.repository";
 import { AuthUseCase } from "@/usecase/auth.usecase";
+import { Button } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -95,7 +96,7 @@ const DropdownUser = () => {
         </svg>
       </Link>
 
-      <button
+      <Button
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
@@ -130,7 +131,7 @@ const DropdownUser = () => {
             </Link>
           </li>
         </ul>
-        <button
+        <Button
           className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
           onClick={handleLogout}
         >
@@ -152,8 +153,8 @@ const DropdownUser = () => {
             />
           </svg>
           Log Out
-        </button>
-      </button>
+        </Button>
+      </Button>
     </div>
   );
 };

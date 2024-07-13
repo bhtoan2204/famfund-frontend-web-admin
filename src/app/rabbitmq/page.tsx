@@ -3,7 +3,18 @@
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { RabbitmqRepository } from "@/repository/rabbitmq.repository";
 import { RabbitmqUsecase } from "@/usecase/rabbitmq.use.case";
-import { Card, Col, List, Row, Space, Spin, Statistic, Table, Tabs, Tag, Typography } from "antd";
+import {
+  Card,
+  Col,
+  Row,
+  Space,
+  Spin,
+  Statistic,
+  Table,
+  Tabs,
+  Tag,
+  Typography,
+} from "antd";
 import { useEffect, useState } from "react";
 import {
   CloudDownloadOutlined,
@@ -12,8 +23,7 @@ import {
   LineChartOutlined,
   InfoCircleOutlined,
   DatabaseOutlined,
-} from '@ant-design/icons';
-
+} from "@ant-design/icons";
 
 interface NodeStatistics {
   name: string;
@@ -144,29 +154,29 @@ const QueueStatisticsCard: React.FC<QueueStatistics> = ({
 }) => {
   if (!message_stats) {
     return (
-      <Card title={name} bordered={false} style={{ margin: '16px 0' }}>
+      <Card title={name} bordered={false} style={{ margin: "16px 0" }}>
         <div>This queue does not have data yet</div>
       </Card>
     );
   }
   const columns = [
     {
-      title: 'Operation',
-      dataIndex: 'operation',
-      key: 'operation',
+      title: "Operation",
+      dataIndex: "operation",
+      key: "operation",
     },
     {
-      title: 'Count',
-      dataIndex: 'count',
-      key: 'count',
+      title: "Count",
+      dataIndex: "count",
+      key: "count",
       render: (count: number) => (
         <Statistic value={count} prefix={<LineChartOutlined />} />
       ),
     },
     {
-      title: 'Rate',
-      dataIndex: 'rate',
-      key: 'rate',
+      title: "Rate",
+      dataIndex: "rate",
+      key: "rate",
       render: (rate: number) => (
         <Statistic value={rate} prefix={<ClockCircleOutlined />} />
       ),
@@ -175,29 +185,29 @@ const QueueStatisticsCard: React.FC<QueueStatistics> = ({
 
   const messageStatsData = [
     {
-      operation: 'Publish',
+      operation: "Publish",
       count: message_stats.publish,
       rate: message_stats.publish_details.rate,
     },
     {
-      operation: 'Deliver',
+      operation: "Deliver",
       count: message_stats.deliver,
       rate: message_stats.deliver_details.rate,
     },
     {
-      operation: 'Get',
+      operation: "Get",
       count: message_stats.get,
       rate: message_stats.get_details.rate,
     },
     {
-      operation: 'Acknowledge',
+      operation: "Acknowledge",
       count: message_stats.ack,
       rate: message_stats.ack_details.rate,
     },
   ];
 
   return (
-    <Card title={name} bordered={false} style={{ margin: '16px 0' }}>
+    <Card title={name} bordered={false} style={{ margin: "16px 0" }}>
       <Row gutter={16}>
         <Col span={12}>
           <Statistic
@@ -228,13 +238,11 @@ const QueueStatisticsCard: React.FC<QueueStatistics> = ({
           />
         </Col>
       </Row>
-      <Space style={{ marginBottom: '16px' }}>
+      <Space style={{ marginBottom: "16px" }}>
         <Typography.Paragraph>
           Ready Message Bytes: {message_bytes_ready}
         </Typography.Paragraph>
-        <Tag color={state === 'running' ? 'green' : 'red'}>
-          {state}
-        </Tag>
+        <Tag color={state === "running" ? "green" : "red"}>{state}</Tag>
       </Space>
       <Table
         columns={columns}
@@ -282,7 +290,7 @@ const RmqPage = () => {
     io_write_bytes: 0,
     context_switches: 0,
     run_queue: 0,
-    processors: 0
+    processors: 0,
   });
 
   const getQueues = async () => {
@@ -291,13 +299,12 @@ const RmqPage = () => {
       if (response.status === 200) {
         setQueues(response.data);
       } else {
-        throw new Error('Error fetching queues');
+        throw new Error("Error fetching queues");
       }
     } catch (error) {
       console.error(error);
       throw error;
-    }
-    finally {
+    } finally {
       setIsQueueLoading(false);
     }
   };
@@ -307,15 +314,12 @@ const RmqPage = () => {
       const response = await rabbitmqUseCase.getNodeStatistics();
       if (response.status === 200) {
         setNodeStatistics(response.data);
+      } else {
+        throw new Error("Error fetching node statistics");
       }
-      else {
-        throw new Error('Error fetching node statistics');
-      }
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
-    }
-    finally {
+    } finally {
       setIsNodeLoading(false);
     }
   };
@@ -331,9 +335,16 @@ const RmqPage = () => {
     }
 
     const formattedDays = days > 0 ? `${days} days ` : "";
-    const formattedHours = (days > 0 || hours % 24 > 0) ? `${hours % 24} hours ` : "";
-    const formattedMinutes = (days > 0 || hours % 24 > 0 || minutes % 60 > 0) ? `${minutes % 60} minutes ` : "";
-    const formattedSeconds = (days > 0 || hours % 24 > 0 || minutes % 60 > 0 || seconds % 60 > 0) ? `${seconds % 60} seconds` : "";
+    const formattedHours =
+      days > 0 || hours % 24 > 0 ? `${hours % 24} hours ` : "";
+    const formattedMinutes =
+      days > 0 || hours % 24 > 0 || minutes % 60 > 0
+        ? `${minutes % 60} minutes `
+        : "";
+    const formattedSeconds =
+      days > 0 || hours % 24 > 0 || minutes % 60 > 0 || seconds % 60 > 0
+        ? `${seconds % 60} seconds`
+        : "";
 
     return `${formattedDays}${formattedHours}${formattedMinutes}${formattedSeconds}`;
   }
@@ -357,35 +368,59 @@ const RmqPage = () => {
 
   return (
     <DefaultLayout>
-      <Typography.Title level={2}>RabbitMQ Statistics</Typography.Title>
-      <div className="flex flex-col gap-4 md:gap-6 xl:gap-7.5 w-full">
+      <Typography.Title>RabbitMQ Statistics</Typography.Title>
+      <div className="flex w-full flex-col gap-4 md:gap-6 xl:gap-7.5">
         <div className="flex-grow">
           <Spin spinning={isNodeLoading}>
             <div className="m-5">
-              <Tabs defaultActiveKey="1" type="card" style={{ height: '300px' }}  items={
-                [
+              <Tabs
+                defaultActiveKey="1"
+                type="card"
+                style={{ height: "300px" }}
+                items={[
                   {
-                    key: '1',
-                    label: 'Node',
+                    key: "1",
+                    label: "Node",
                     children: (
                       <Row gutter={[16, 16]}>
                         <Col span={8}>
-                          <Card title="Node Name" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Node Name"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.name}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={8}>
-                          <Card title="Running" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Running"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.running ? "Yes" : "No"}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={8}>
-                          <Card title="Uptime" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Uptime"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {formatMs(nodeStatistics.uptime)}
                             </Typography.Text>
                           </Card>
@@ -394,27 +429,48 @@ const RmqPage = () => {
                     ),
                   },
                   {
-                    key: '2',
-                    label: 'Memory',
+                    key: "2",
+                    label: "Memory",
                     children: (
                       <Row gutter={[16, 16]}>
                         <Col span={8}>
-                          <Card title="Memory Used" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Memory Used"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {formatBytes(nodeStatistics.mem_used)}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={8}>
-                          <Card title="Memory Limit" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Memory Limit"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {formatBytes(nodeStatistics.mem_limit)}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={8}>
-                          <Card title="Memory Alarm" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Memory Alarm"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.mem_alarm ? "On" : "Off"}
                             </Typography.Text>
                           </Card>
@@ -423,27 +479,48 @@ const RmqPage = () => {
                     ),
                   },
                   {
-                    key: '3',
-                    label: 'Disk',
+                    key: "3",
+                    label: "Disk",
                     children: (
                       <Row gutter={[16, 16]}>
                         <Col span={8}>
-                          <Card title="Disk Free" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Disk Free"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {formatBytes(nodeStatistics.disk_free)}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={8}>
-                          <Card title="Disk Free Limit" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Disk Free Limit"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {formatBytes(nodeStatistics.disk_free_limit)}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={8}>
-                          <Card title="Disk Free Alarm" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Disk Free Alarm"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.disk_free_alarm ? "On" : "Off"}
                             </Typography.Text>
                           </Card>
@@ -452,34 +529,62 @@ const RmqPage = () => {
                     ),
                   },
                   {
-                    key: '4',
-                    label: 'File Descriptors & Sockets',
+                    key: "4",
+                    label: "File Descriptors & Sockets",
                     children: (
                       <Row gutter={[16, 16]}>
                         <Col span={6}>
-                          <Card title="FD Used" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="FD Used"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.fd_used}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card title="FD Total" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="FD Total"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.fd_total}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card title="Sockets Used" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Sockets Used"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.sockets_used}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card title="Sockets Total" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Sockets Total"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.sockets_total}
                             </Typography.Text>
                           </Card>
@@ -488,20 +593,34 @@ const RmqPage = () => {
                     ),
                   },
                   {
-                    key: '5',
-                    label: 'Processes',
+                    key: "5",
+                    label: "Processes",
                     children: (
                       <Row gutter={[16, 16]}>
                         <Col span={12}>
-                          <Card title="Processes Used" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Processes Used"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.proc_used}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={12}>
-                          <Card title="Processes Total" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Processes Total"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.proc_total}
                             </Typography.Text>
                           </Card>
@@ -510,34 +629,62 @@ const RmqPage = () => {
                     ),
                   },
                   {
-                    key: '6',
-                    label: 'Queues & Channels',
+                    key: "6",
+                    label: "Queues & Channels",
                     children: (
                       <Row gutter={[16, 16]}>
                         <Col span={6}>
-                          <Card title="Queues Created" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Queues Created"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.queue_created}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card title="Queues Deleted" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Queues Deleted"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.queue_deleted}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card title="Channels Created" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Channels Created"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.channel_created}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card title="Channels Closed" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Channels Closed"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.channel_closed}
                             </Typography.Text>
                           </Card>
@@ -546,20 +693,34 @@ const RmqPage = () => {
                     ),
                   },
                   {
-                    key: '7',
-                    label: 'Connections',
+                    key: "7",
+                    label: "Connections",
                     children: (
                       <Row gutter={[16, 16]}>
                         <Col span={12}>
-                          <Card title="Connections Created" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Connections Created"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.connection_created}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={12}>
-                          <Card title="Connections Closed" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Connections Closed"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.connection_closed}
                             </Typography.Text>
                           </Card>
@@ -568,20 +729,34 @@ const RmqPage = () => {
                     ),
                   },
                   {
-                    key: '8',
-                    label: 'Garbage Collection',
+                    key: "8",
+                    label: "Garbage Collection",
                     children: (
                       <Row gutter={[16, 16]}>
                         <Col span={12}>
-                          <Card title="GC Runs" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="GC Runs"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.gc_num}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={12}>
-                          <Card title="GC Bytes Reclaimed" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="GC Bytes Reclaimed"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {formatBytes(nodeStatistics.gc_bytes_reclaimed)}
                             </Typography.Text>
                           </Card>
@@ -590,55 +765,104 @@ const RmqPage = () => {
                     ),
                   },
                   {
-                    key: '9',
-                    label: 'IO & Context Switches',
+                    key: "9",
+                    label: "IO & Context Switches",
                     children: (
                       <Row gutter={[16, 16]}>
                         <Col span={8}>
-                          <Card title="IO Read Count" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="IO Read Count"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.io_read_count}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={8}>
-                          <Card title="IO Read Bytes" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="IO Read Bytes"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {formatBytes(nodeStatistics.io_read_bytes)}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={8}>
-                          <Card title="IO Write Count" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="IO Write Count"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.io_write_count}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card title="IO Write Bytes" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="IO Write Bytes"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {formatBytes(nodeStatistics.io_write_bytes)}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card title="Context Switches" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Context Switches"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.context_switches}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card title="Run Queue" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Run Queue"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.run_queue}
                             </Typography.Text>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card title="Processors" bordered={false} style={{ textAlign: 'center' }}>
-                            <Typography.Text strong style={{ fontSize: '1.2em' }}>
+                          <Card
+                            title="Processors"
+                            bordered={false}
+                            style={{ textAlign: "center" }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "1.2em" }}
+                            >
                               {nodeStatistics.processors}
                             </Typography.Text>
                           </Card>
@@ -646,19 +870,24 @@ const RmqPage = () => {
                       </Row>
                     ),
                   },
-                ]
-              } />
+                ]}
+              />
             </div>
           </Spin>
         </div>
         <div>
           <Spin spinning={isQueueLoading}>
             <Row gutter={16}>
-              {queues.sort((a, b) => (b.message_stats ? 1 : 0) - (a.message_stats ? 1 : 0)).map((queue) => (
-                <Col key={queue.name} span={6}>
-                  <QueueStatisticsCard {...queue} />
-                </Col>
-              ))}
+              {queues
+                .sort(
+                  (a, b) =>
+                    (b.message_stats ? 1 : 0) - (a.message_stats ? 1 : 0),
+                )
+                .map((queue) => (
+                  <Col key={queue.name} span={6}>
+                    <QueueStatisticsCard {...queue} />
+                  </Col>
+                ))}
             </Row>
           </Spin>
         </div>

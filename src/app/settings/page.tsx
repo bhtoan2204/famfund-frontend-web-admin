@@ -15,6 +15,7 @@ import {
   Image,
   Input,
   Select,
+  Typography,
   Upload,
   UploadFile,
 } from "antd";
@@ -101,7 +102,6 @@ const Settings = () => {
     <DefaultLayout>
       <div className="mx-auto max-w-270">
         <Breadcrumb pageName="Settings" />
-
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -209,19 +209,18 @@ const Settings = () => {
                   </div>
 
                   <div className="flex justify-end gap-4.5">
-                    <button
+                    <Button
                       className="flex justify-center rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
                       onClick={() => router.push("/dashboard")}
                     >
                       Cancel
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       className="flex justify-center rounded bg-primary px-6 py-2 font-medium text-gray hover:bg-opacity-90"
-                      type="submit"
                       onSubmit={form.submit}
                     >
                       Save
-                    </button>
+                    </Button>
                   </div>
                 </Form>
               </div>
@@ -250,12 +249,12 @@ const Settings = () => {
                         Edit your photo
                       </span>
                       <span className="flex gap-2.5">
-                        <button className="text-sm hover:text-primary">
+                        <Button className="text-sm hover:text-primary">
                           Delete
-                        </button>
-                        <button className="text-sm hover:text-primary">
+                        </Button>
+                        <Button className="text-sm hover:text-primary">
                           Update
-                        </button>
+                        </Button>
                       </span>
                     </div>
                   </div>
@@ -270,13 +269,10 @@ const Settings = () => {
                       listType="picture-card"
                     >
                       {(fileList === undefined || fileList?.length === 0) && (
-                        <button
-                          style={{ border: 0, background: "none" }}
-                          type="button"
-                        >
+                        <Button style={{ border: 0, background: "none" }}>
                           <PlusOutlined />
                           <div style={{ marginTop: 8 }}>Upload</div>
-                        </button>
+                        </Button>
                       )}
                     </Upload>
                     {previewImage && (

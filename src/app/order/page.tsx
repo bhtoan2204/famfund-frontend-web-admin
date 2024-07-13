@@ -11,9 +11,10 @@ import {
   TablePaginationConfig,
   Button,
   Modal,
-  Divider,
   Descriptions,
   Tabs,
+  Spin,
+  Typography,
 } from "antd";
 import {
   FilterValue,
@@ -131,16 +132,19 @@ const OrderPage = () => {
     type: "ALL",
   });
 
+  const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const getListUserOrders = async () => {
     try {
+      setLoading(true);
       const { data, status } =
         await datafetcherUsecase.getUserOrders(userOrderDTO);
       if (status === 200) {
         setUserOrders(data.data);
         setTotalOrders(data.total);
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -281,7 +285,7 @@ const OrderPage = () => {
 
   return (
     <DefaultLayout>
-      <h1>Order Page</h1>
+      <Typography.Title>Order Page</Typography.Title>
       <Card style={{ marginTop: "24px" }}>
         <h2>User Orders</h2>
         <Search
@@ -301,18 +305,20 @@ const OrderPage = () => {
           <Option value="EXTRA">EXTRA</Option>
           <Option value="COMBO">COMBO</Option>
         </Select>
-        <Table
-          dataSource={userOrders}
-          columns={columns}
-          rowKey="id_order"
-          pagination={{
-            current: userOrderDTO.page,
-            pageSize: userOrderDTO.itemsPerPage,
-            total: totalOrders,
-          }}
-          onChange={handleTableChange}
-          scroll={{ x: "max-content" }}
-        />
+        <Spin spinning={loading}>
+          <Table
+            dataSource={userOrders}
+            columns={columns}
+            rowKey="id_order"
+            pagination={{
+              current: userOrderDTO.page,
+              pageSize: userOrderDTO.itemsPerPage,
+              total: totalOrders,
+            }}
+            onChange={handleTableChange}
+            scroll={{ x: "max-content" }}
+          />
+        </Spin>
       </Card>
       <Modal
         title="Order Details"

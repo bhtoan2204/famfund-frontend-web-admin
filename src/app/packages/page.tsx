@@ -1,7 +1,7 @@
 "use client";
 
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import { Tabs } from "antd";
+import { Tabs, Typography } from "antd";
 import { ComboPackageTab, ExtraPackageTab, MainPackageTab } from "./_packages";
 
 export default function Dashboard() {
@@ -26,6 +26,7 @@ export default function Dashboard() {
   return (
     <>
       <DefaultLayout>
+        <Typography.Title>Packages</Typography.Title>
         <Tabs defaultActiveKey="1" items={items} />
       </DefaultLayout>
     </>
