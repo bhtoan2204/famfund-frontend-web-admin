@@ -10,9 +10,6 @@ import {
   Table,
   TablePaginationConfig,
   Button,
-  Modal,
-  Descriptions,
-  Tabs,
   Spin,
   Typography,
 } from "antd";
@@ -21,9 +18,9 @@ import {
   SorterResult,
   TableCurrentDataSource,
 } from "antd/es/table/interface";
-import TabPane from "antd/es/tabs/TabPane";
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import OrderModal from "./components/OrderModal";
+import DiscountModal from "./components/DiscountModal";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -135,6 +132,7 @@ const OrderPage = () => {
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isDiscountModalVisible, setIsDiscountModalVisible] = useState(false);
 
   const getListUserOrders = async () => {
     try {
@@ -288,23 +286,41 @@ const OrderPage = () => {
       <Typography.Title>Order Page</Typography.Title>
       <Card style={{ marginTop: "24px" }}>
         <h2>User Orders</h2>
-        <Search
-          placeholder="Search by keyword"
-          onSearch={handleSearch}
-          style={{ width: 200, marginBottom: 16 }}
-        />
-        <Select
-          placeholder="Filter by Package"
-          onChange={handlePackageChange}
-          allowClear
-          style={{ width: 200, marginLeft: 16, marginBottom: 16 }}
-          defaultValue="ALL"
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          <Option value="ALL">ALL</Option>
-          <Option value="MAIN">MAIN</Option>
-          <Option value="EXTRA">EXTRA</Option>
-          <Option value="COMBO">COMBO</Option>
-        </Select>
+          <div>
+            <Search
+              placeholder="Search by keyword"
+              onSearch={handleSearch}
+              style={{ width: 200, marginBottom: 16 }}
+            />
+            <Select
+              placeholder="Filter by Package"
+              onChange={handlePackageChange}
+              allowClear
+              style={{ width: 200, marginLeft: 16, marginBottom: 16 }}
+              defaultValue="ALL"
+            >
+              <Option value="ALL">ALL</Option>
+              <Option value="MAIN">MAIN</Option>
+              <Option value="EXTRA">EXTRA</Option>
+              <Option value="COMBO">COMBO</Option>
+            </Select>
+          </div>
+          <Button
+            style={{ width: 200, marginBottom: 16 }}
+            onClick={() => {
+              setIsDiscountModalVisible(true);
+            }}
+          >
+            Show Discount
+          </Button>
+        </div>
         <Spin spinning={loading}>
           <Table
             dataSource={userOrders}
@@ -320,188 +336,17 @@ const OrderPage = () => {
           />
         </Spin>
       </Card>
-      <Modal
-        title="Order Details"
-        width={800}
-        open={isModalVisible}
-        onCancel={handleModalClose}
-        footer={[
-          <Button key="close" onClick={handleModalClose}>
-            Close
-          </Button>,
-        ]}
-      >
-        {selectedOrder && (
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="Order" key="1">
-              <Descriptions bordered column={1}>
-                <Descriptions.Item label="Order ID">
-                  {selectedOrder.id_order}
-                </Descriptions.Item>
-                <Descriptions.Item label="Status">
-                  {selectedOrder.status}
-                </Descriptions.Item>
-                <Descriptions.Item label="Price">
-                  {selectedOrder.price}
-                </Descriptions.Item>
-                <Descriptions.Item label="Method">
-                  {selectedOrder.method}
-                </Descriptions.Item>
-                <Descriptions.Item label="Bank Code">
-                  {selectedOrder.bank_code}
-                </Descriptions.Item>
-                <Descriptions.Item label="Created At">
-                  {selectedOrder.created_at}
-                </Descriptions.Item>
-                <Descriptions.Item label="Updated At">
-                  {selectedOrder.updated_at}
-                </Descriptions.Item>
-              </Descriptions>
-            </TabPane>
-            <TabPane tab="Package" key="2">
-              <Descriptions bordered column={1}>
-                <Descriptions.Item label="Package Type">
-                  {selectedOrder.packageMain
-                    ? "Main Package"
-                    : selectedOrder.packageExtra
-                      ? "Extra Package"
-                      : "Combo Package"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Package Name">
-                  {selectedOrder.packageMain
-                    ? selectedOrder.packageMain.name
-                    : selectedOrder.packageExtra
-                      ? selectedOrder.packageExtra.name
-                      : selectedOrder.packageCombo
-                        ? selectedOrder.packageCombo.name
-                        : ""}
-                </Descriptions.Item>
-                <Descriptions.Item label="Package Description">
-                  {selectedOrder.packageMain
-                    ? selectedOrder.packageMain.description
-                    : selectedOrder.packageExtra
-                      ? selectedOrder.packageExtra.description
-                      : selectedOrder.packageCombo
-                        ? selectedOrder.packageCombo.description
-                        : ""}
-                </Descriptions.Item>
-                <Descriptions.Item label="Package Price">
-                  {selectedOrder.packageMain
-                    ? selectedOrder.packageMain.price
-                    : selectedOrder.packageExtra
-                      ? selectedOrder.packageExtra.price
-                      : selectedOrder.packageCombo
-                        ? selectedOrder.packageCombo.price
-                        : ""}
-                </Descriptions.Item>
-                <Descriptions.Item label="Package Duration (Months)">
-                  {selectedOrder.packageMain
-                    ? selectedOrder.packageMain.duration_months
-                    : "N/A"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Package Created At">
-                  {selectedOrder.packageMain
-                    ? selectedOrder.packageMain.created_at.toString()
-                    : selectedOrder.packageExtra
-                      ? selectedOrder.packageExtra.created_at.toString()
-                      : selectedOrder.packageCombo
-                        ? selectedOrder.packageCombo.created_at.toString()
-                        : ""}
-                </Descriptions.Item>
-                <Descriptions.Item label="Package Updated At">
-                  {selectedOrder.packageMain
-                    ? selectedOrder.packageMain.updated_at.toString()
-                    : selectedOrder.packageExtra
-                      ? selectedOrder.packageExtra.updated_at.toString()
-                      : selectedOrder.packageCombo
-                        ? selectedOrder.packageCombo.updated_at.toString()
-                        : ""}
-                </Descriptions.Item>
-              </Descriptions>
-            </TabPane>
-            <TabPane tab="Family" key="3">
-              <Descriptions bordered column={1}>
-                <Descriptions.Item label="Family Name">
-                  {selectedOrder.family
-                    ? selectedOrder.family.name
-                    : "Not assigned to any family"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Family Description">
-                  {selectedOrder.family
-                    ? selectedOrder.family.description
-                    : "N/A"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Family Quantity">
-                  {selectedOrder.family ? selectedOrder.family.quantity : "N/A"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Family Owner ID">
-                  {selectedOrder.family ? selectedOrder.family.owner_id : "N/A"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Family Expired At">
-                  {selectedOrder.family
-                    ? selectedOrder.family.expired_at
-                    : "N/A"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Family Created At">
-                  {selectedOrder.family
-                    ? selectedOrder.family.created_at
-                    : "N/A"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Family Updated At">
-                  {selectedOrder.family
-                    ? selectedOrder.family.updated_at
-                    : "N/A"}
-                </Descriptions.Item>
-              </Descriptions>
-            </TabPane>
-            <TabPane tab="User" key="4">
-              <Descriptions bordered column={1}>
-                <Descriptions.Item label="User ID">
-                  {selectedOrder.users.id_user}
-                </Descriptions.Item>
-                <Descriptions.Item label="Email">
-                  {selectedOrder.users.email}
-                </Descriptions.Item>
-                <Descriptions.Item label="Phone">
-                  {selectedOrder.users.phone}
-                </Descriptions.Item>
-                <Descriptions.Item label="Name">
-                  {`${selectedOrder.users.firstname} ${selectedOrder.users.lastname}`}
-                </Descriptions.Item>
-                <Descriptions.Item label="Phone Verified">
-                  {selectedOrder.users.isphoneverified ? "Yes" : "No"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Admin">
-                  {selectedOrder.users.isadmin ? "Yes" : "No"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Login Type">
-                  {selectedOrder.users.login_type}
-                </Descriptions.Item>
-                <Descriptions.Item label="Genre">
-                  {selectedOrder.users.genre}
-                </Descriptions.Item>
-                <Descriptions.Item label="Birthdate">
-                  {selectedOrder.users.birthdate}
-                </Descriptions.Item>
-                <Descriptions.Item label="Avatar">
-                  <Image
-                    src={selectedOrder.users.avatar}
-                    alt="Avatar"
-                    width={50}
-                    height={50}
-                  />
-                </Descriptions.Item>
-                <Descriptions.Item label="User Created At">
-                  {selectedOrder.users.created_at}
-                </Descriptions.Item>
-                <Descriptions.Item label="User Updated At">
-                  {selectedOrder.users.updated_at}
-                </Descriptions.Item>
-              </Descriptions>
-            </TabPane>
-          </Tabs>
-        )}
-      </Modal>
+      <OrderModal
+        isModalVisible={isModalVisible}
+        handleModalClose={handleModalClose}
+        selectedOrder={selectedOrder}
+      ></OrderModal>
+      <DiscountModal
+        visible={isDiscountModalVisible}
+        onClose={function (): void {
+          setIsDiscountModalVisible(false);
+        }}
+      ></DiscountModal>
     </DefaultLayout>
   );
 };
