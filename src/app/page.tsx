@@ -1,17 +1,22 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { NextPage } from "next";
 
 const Home: NextPage = () => {
-  // Redirect to "/dashboard" when the Server Component renders
-  if (typeof window === "undefined") {
-    return (
-      <DefaultLayout>
-        <div>Dashboard</div>
-      </DefaultLayout>
-    );
-  } else {
-    return null; // Don't render anything on the client-side
-  }
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/dashboard");
+  }, [router]);
+
+  return (
+    <DefaultLayout>
+      <div>Redirecting...</div>
+    </DefaultLayout>
+  );
 };
 
 export default Home;

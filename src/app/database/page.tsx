@@ -300,30 +300,31 @@ const DatabasePage = () => {
           ) : (
             <div>
               <Row gutter={[16, 16]}>
-                {mongoStat.map((stat, index) => (
-                  <Col span={8} key={index}>
-                    <Card>
-                      <Typography.Title level={5}>{stat.ns}</Typography.Title>
-                      <Descriptions>
-                        <Descriptions.Item label="Size">
-                          {stat.size} bytes
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Count">
-                          {stat.count}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Avg.Object Size">
-                          {stat.avgObjSize} bytes
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Storage Size">
-                          {stat.storageSize} bytes
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Index Size">
-                          {stat.totalIndexSize} bytes
-                        </Descriptions.Item>
-                      </Descriptions>
-                    </Card>
-                  </Col>
-                ))}
+                {mongoStat.length > 0 &&
+                  mongoStat.map((stat, index) => (
+                    <Col span={8} key={index}>
+                      <Card>
+                        <Typography.Title level={5}>{stat.ns}</Typography.Title>
+                        <Descriptions>
+                          <Descriptions.Item label="Size">
+                            {stat.size} bytes
+                          </Descriptions.Item>
+                          <Descriptions.Item label="Count">
+                            {stat.count}
+                          </Descriptions.Item>
+                          <Descriptions.Item label="Avg.Object Size">
+                            {stat.avgObjSize} bytes
+                          </Descriptions.Item>
+                          <Descriptions.Item label="Storage Size">
+                            {stat.storageSize} bytes
+                          </Descriptions.Item>
+                          <Descriptions.Item label="Index Size">
+                            {stat.totalIndexSize} bytes
+                          </Descriptions.Item>
+                        </Descriptions>
+                      </Card>
+                    </Col>
+                  ))}
               </Row>
             </div>
           )}
@@ -340,7 +341,7 @@ const DatabasePage = () => {
                 style={{ width: 300, marginBottom: 16 }}
               />
               <Table
-                dataSource={filteredData}
+                dataSource={filteredData || []}
                 columns={tableSizeColumns}
                 rowKey={(record: any) => {
                   return record["Table"];
@@ -355,7 +356,7 @@ const DatabasePage = () => {
             <Spin />
           ) : (
             <Table
-              dataSource={postgreActiveSession}
+              dataSource={postgreActiveSession || []}
               columns={activeSessionColumns}
               rowKey={(record: ActiveSession) => {
                 return `${record.pid + record.client_addr + record.client_port}`;

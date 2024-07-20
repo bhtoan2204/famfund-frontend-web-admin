@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-famfund-admin-deployment
+  namespace: frontend
+  labels:
+    app: frontend-famfund-admin
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-famfund-admin
+  template:
+    metadata:
+      labels:
+        app: frontend-famfund-admin
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: frontend-famfund-admin
+          image: mjkundta/frontend-famfund-admin:latest
+          imagePullPolicy: Always
+          env:
+            - name: NEXT_PUBLIC_API_URL
+              value: "https://api.rancher.io.vn"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-famfund-admin
+  namespace: frontend
+  labels:
+    app: frontend-famfund-admin
+spec:
+  selector:
+    app: frontend-famfund-admin
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
