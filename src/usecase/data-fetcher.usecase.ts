@@ -61,4 +61,14 @@ export class DatafetcherUsecase {
       throw error;
     }
   }
+
+  async getExtraPackageStatistics() {
+    try {
+      const response =
+        await this.datafetcherRepository.getExtraPackageStatistics();
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -12,6 +12,9 @@ import {
   Button,
   Spin,
   Typography,
+  Col,
+  Statistic,
+  Row,
 } from "antd";
 import {
   FilterValue,
@@ -21,7 +24,14 @@ import {
 import { useEffect, useState } from "react";
 import OrderModal from "./components/OrderModal";
 import DiscountModal from "./components/DiscountModal";
-
+import {
+  ArrowUpOutlined,
+  UserOutlined,
+  TeamOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CloseCircleOutlined,
+} from "@ant-design/icons";
 const { Search } = Input;
 const { Option } = Select;
 
@@ -114,6 +124,11 @@ interface UserOrderDTO {
   type: "ALL" | "MAIN" | "EXTRA" | "COMBO";
 }
 
+interface PackagesExtrasCount {
+  name: string;
+  count: number;
+}
+
 const OrderPage = () => {
   const datafetcherUsecase = new DatafetcherUsecase(
     new DataFetcherRepository(),
@@ -134,6 +149,10 @@ const OrderPage = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDiscountModalVisible, setIsDiscountModalVisible] = useState(false);
 
+  const [packagesExtrasCount, setPackagesExtrasCount] = useState<
+    PackagesExtrasCount[]
+  >([]);
+
   const getListUserOrders = async () => {
     try {
       setLoading(true);
@@ -148,6 +167,24 @@ const OrderPage = () => {
       console.error(error);
     }
   };
+
+  const getExtrasCount = async () => {
+    try {
+      const { data, status } =
+        await datafetcherUsecase.getExtraPackageStatistics();
+      console.log(data);
+      if (status === 200) {
+        setPackagesExtrasCount(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getExtrasCount();
+    console.log(packagesExtrasCount);
+  }, []);
 
   useEffect(() => {
     getListUserOrders();
@@ -284,6 +321,89 @@ const OrderPage = () => {
   return (
     <DefaultLayout>
       <Typography.Title>Order Page</Typography.Title>
+      <Spin spinning={loading}>
+        <Row
+          gutter={20}
+          style={{
+            marginBottom: "24px",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Col flex="1 1 18%">
+            <Card>
+              <Statistic
+                title="Total Users"
+                value={0}
+                prefix={<UserOutlined />}
+              />
+            </Card>
+          </Col>
+          <Col flex="1 1 18%">
+            <Card>
+              <Statistic
+                title="Total Families"
+                value={0}
+                prefix={<TeamOutlined />}
+              />
+            </Card>
+          </Col>
+          <Col flex="1 1 18%">
+            <Card>
+              <Statistic
+                title="Total Orders Succeeded"
+                value={0}
+                prefix={<CheckCircleOutlined style={{ color: "green" }} />}
+              />
+            </Card>
+          </Col>
+          <Col flex="1 1 18%">
+            <Card>
+              <Statistic
+                title="Total Orders Pending"
+                value={0}
+                prefix={<ClockCircleOutlined style={{ color: "orange" }} />}
+              />
+            </Card>
+          </Col>
+          <Col flex="1 1 18%">
+            <Card>
+              <Statistic
+                title="Total Orders Failed"
+                value={0}
+                prefix={<CloseCircleOutlined style={{ color: "red" }} />}
+              />
+            </Card>
+          </Col>
+        </Row>
+
+        <Row gutter={16} style={{ marginBottom: "24px" }}>
+          <Col span={6}>
+            <Card>
+              <Statistic title="Total Main Packages purchased" value={0} />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic title="Total Extra Packages purchased" value={0} />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic title="Total Combo Packages purchased" value={0} />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                title="Revenue"
+                value={0}
+                prefix={<ArrowUpOutlined />}
+              />
+            </Card>
+          </Col>
+        </Row>
+      </Spin>
       <Card style={{ marginTop: "24px" }}>
         <h2>User Orders</h2>
         <div
