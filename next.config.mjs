@@ -5,7 +5,6 @@ const nextConfig = {
     domains: ["storage.googleapis.com"],
     unoptimized: true,
   },
-  output: "export",
 };
 
 export default nextConfig;

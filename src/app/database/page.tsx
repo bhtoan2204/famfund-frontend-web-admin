@@ -254,7 +254,6 @@ const DatabasePage = () => {
   } else {
     return (
       <DefaultLayout>
-        <Typography.Title>Database</Typography.Title>
         <Modal
           title={`IPData Information for ${selectedIP}`}
           open={isModalVisible}
@@ -299,33 +298,65 @@ const DatabasePage = () => {
             <Spin />
           ) : (
             <div>
-              <Row gutter={[16, 16]}>
-                {mongoStat.length > 0 &&
-                  mongoStat.map((stat, index) => (
-                    <Col span={8} key={index}>
-                      <Card>
-                        <Typography.Title level={5}>{stat.ns}</Typography.Title>
-                        <Descriptions>
-                          <Descriptions.Item label="Size">
-                            {stat.size} bytes
-                          </Descriptions.Item>
-                          <Descriptions.Item label="Count">
-                            {stat.count}
-                          </Descriptions.Item>
-                          <Descriptions.Item label="Avg.Object Size">
-                            {stat.avgObjSize} bytes
-                          </Descriptions.Item>
-                          <Descriptions.Item label="Storage Size">
-                            {stat.storageSize} bytes
-                          </Descriptions.Item>
-                          <Descriptions.Item label="Index Size">
-                            {stat.totalIndexSize} bytes
-                          </Descriptions.Item>
-                        </Descriptions>
-                      </Card>
-                    </Col>
-                  ))}
-              </Row>
+              {isMongoLoading ? (
+                <Spin style={{ display: "block", margin: "20px auto" }} />
+              ) : (
+                <Row gutter={[24, 24]}>
+                  {mongoStat.length > 0 &&
+                    mongoStat.map((stat, index) => (
+                      <Col span={8} key={index}>
+                        <Card
+                          hoverable
+                          bordered={false}
+                          style={{
+                            backgroundColor: "#ffffff",
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                            borderRadius: "8px",
+                            cursor: "default",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "scale(1.05)";
+                            e.currentTarget.style.boxShadow =
+                              "0 8px 16px rgba(0, 0, 0, 0.2)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "scale(1)";
+                            e.currentTarget.style.boxShadow =
+                              "0 4px 8px rgba(0, 0, 0, 0.1)";
+                          }}
+                        >
+                          <Typography.Title
+                            level={5}
+                            style={{ marginBottom: "16px" }}
+                          >
+                            {stat.ns}
+                          </Typography.Title>
+                          <Descriptions
+                            column={1}
+                            size="small"
+                            layout="vertical"
+                          >
+                            <Descriptions.Item label="Size">
+                              {stat.size.toLocaleString()} bytes
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Count">
+                              {stat.count.toLocaleString()}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Avg. Object Size">
+                              {stat.avgObjSize.toLocaleString()} bytes
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Storage Size">
+                              {stat.storageSize.toLocaleString()} bytes
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Index Size">
+                              {stat.totalIndexSize.toLocaleString()} bytes
+                            </Descriptions.Item>
+                          </Descriptions>
+                        </Card>
+                      </Col>
+                    ))}
+                </Row>
+              )}
             </div>
           )}
           <Typography.Title className="mt-10" level={3}>

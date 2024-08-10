@@ -2,7 +2,7 @@
 import React, { useState, ReactNode } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
-import { MenuOutlined, CloseOutlined } from '@ant-design/icons';
+import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
 
 export default function DefaultLayout({
   children,
@@ -12,8 +12,8 @@ export default function DefaultLayout({
   const [sidebarOpen, setSidebarOpen] = useState(true);
   return (
     <>
-      <div className="flex h-screen overflow-hidden relative">
-      {sidebarOpen ? <Sidebar sidebarOpen={sidebarOpen} />: <></>}
+      <div className="relative flex h-screen overflow-hidden">
+        {sidebarOpen ? <Sidebar sidebarOpen={sidebarOpen} /> : <></>}
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <main>

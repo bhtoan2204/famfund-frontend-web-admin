@@ -393,7 +393,6 @@ const LogsPage = () => {
   return (
     <div>
       <DefaultLayout>
-        <Typography.Title>Logs</Typography.Title>
         <Modal
           title={`IPData Information for ${selectedIP}`}
           open={isModalVisible}
@@ -433,44 +432,47 @@ const LogsPage = () => {
           )}
         </Modal>
         <div className="flex flex-col gap-4 md:gap-6 xl:gap-7.5">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-            <CardDataStats title="Total request" total={logsCount.total}>
-              <DashboardOutlined className="fill-primary text-2xl dark:fill-white" />
-            </CardDataStats>
-            <CardDataStats
-              title="Total successful request"
-              total={logsCount.info}
-            >
-              <CheckCircleOutlined className="fill-primary text-2xl dark:fill-white" />
-            </CardDataStats>
-            <CardDataStats title="Total error request" total={logsCount.error}>
-              <WarningOutlined className="fill-primary text-2xl dark:fill-white" />
-            </CardDataStats>
-            <CardDataStats
-              title="Fail request rate"
-              total={`${logsCount.rate}%`}
-            >
-              <CloseCircleOutlined className="fill-primary text-2xl dark:fill-white" />
-            </CardDataStats>
-          </div>
-          <div className="flex items-center gap-4">
-            <DatePicker
-              value={dayjs(timeStart)}
-              onChange={handleTimeStartChange}
-              format="YYYY-MM-DD"
-              className="w-full"
-              contentEditable="false"
-            />
-            <span>to</span>
-            <DatePicker
-              value={dayjs(timeEnd)}
-              onChange={handleTimeEndChange}
-              format="YYYY-MM-DD"
-              className="w-full"
-              contentEditable="false"
-            />
-          </div>
           <Spin spinning={isChartLoading}>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+              <CardDataStats title="Total request" total={logsCount.total}>
+                <DashboardOutlined className="fill-primary text-2xl dark:fill-white" />
+              </CardDataStats>
+              <CardDataStats
+                title="Total successful request"
+                total={logsCount.info}
+              >
+                <CheckCircleOutlined className="fill-primary text-2xl dark:fill-white" />
+              </CardDataStats>
+              <CardDataStats
+                title="Total error request"
+                total={logsCount.error}
+              >
+                <WarningOutlined className="fill-primary text-2xl dark:fill-white" />
+              </CardDataStats>
+              <CardDataStats
+                title="Fail request rate"
+                total={`${logsCount.rate}%`}
+              >
+                <CloseCircleOutlined className="fill-primary text-2xl dark:fill-white" />
+              </CardDataStats>
+            </div>
+            <div className="mb-5 mt-10 flex items-center gap-4">
+              <DatePicker
+                value={dayjs(timeStart)}
+                onChange={handleTimeStartChange}
+                format="YYYY-MM-DD"
+                className="w-full"
+                contentEditable="false"
+              />
+              <span>to</span>
+              <DatePicker
+                value={dayjs(timeEnd)}
+                onChange={handleTimeEndChange}
+                format="YYYY-MM-DD"
+                className="w-full"
+                contentEditable="false"
+              />
+            </div>
             <ReactApexChart
               options={{
                 chart: {

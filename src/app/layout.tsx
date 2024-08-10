@@ -1,5 +1,5 @@
 "use client";
-import Loader from "@/components/common/Loader";
+import Loader from "@/components/SelectGroup/common/Loader";
 import "@/css/satoshi.css";
 import "@/css/style.css";
 import ReduxProvider from "@/redux/redux-provider";

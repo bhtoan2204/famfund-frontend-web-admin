@@ -5,10 +5,10 @@ export async function middleware(req: NextRequest) {
   const refreshToken = req.cookies.get("refreshToken")?.value as string;
 
   if (!accessToken || !refreshToken) {
-    const redirectUrl = new URL('/login', req.nextUrl.origin);
+    const redirectUrl = new URL("/login", req.nextUrl.origin);
     return NextResponse.redirect(redirectUrl);
   } else if (req.nextUrl.pathname === "/") {
-    const redirectUrl = new URL('/dashboard', req.nextUrl.origin);
+    const redirectUrl = new URL("/dashboard", req.nextUrl.origin);
     return NextResponse.redirect(redirectUrl);
   }
 

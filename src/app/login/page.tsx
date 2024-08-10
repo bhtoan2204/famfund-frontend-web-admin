@@ -20,8 +20,8 @@ const SignIn: React.FC = () => {
   const profileUseCase = new ProfileUseCase(new ProfileRepository());
   const dispatch = useDispatch<AppDispatch>();
   const [formData, setFormData] = useState({
-    email: "banhhaotoan2002@gmail.com",
-    password: "Password123",
+    email: "",
+    password: "",
   });
 
   const [errorMessage, setErrorMessage] = useState("⠀");
