@@ -13,7 +13,6 @@ import {
   Spin,
   Typography,
   Col,
-  Statistic,
   Row,
 } from "antd";
 import {
@@ -24,14 +23,19 @@ import {
 import { useEffect, useState } from "react";
 import OrderModal from "./components/OrderModal";
 import DiscountModal from "./components/DiscountModal";
+import { Bar } from "react-chartjs-2";
 import {
-  ArrowUpOutlined,
-  UserOutlined,
-  TeamOutlined,
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-} from "@ant-design/icons";
+  Chart,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
 const { Search } = Input;
 const { Option } = Select;
 
@@ -172,7 +176,6 @@ const OrderPage = () => {
     try {
       const { data, status } =
         await datafetcherUsecase.getExtraPackageStatistics();
-      console.log(data);
       if (status === 200) {
         setPackagesExtrasCount(data);
       }
@@ -270,6 +273,29 @@ const OrderPage = () => {
     },
   ];
 
+  const data = {
+    labels: packagesExtrasCount.map((pkg) => pkg.name),
+    datasets: [
+      {
+        label: "Package Extras Count",
+        data: packagesExtrasCount.map((pkg) => pkg.count),
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
   const showOrderDetails = (order: Order) => {
     setSelectedOrder(order);
     setIsModalVisible(true);
@@ -321,109 +347,34 @@ const OrderPage = () => {
   return (
     <DefaultLayout>
       <Typography.Title>Order Page</Typography.Title>
-      <Spin spinning={loading}>
-        <Row
-          gutter={20}
-          style={{
-            marginBottom: "24px",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <Col flex="1 1 18%">
-            <Card>
-              <Statistic
-                title="Total Users"
-                value={0}
-                prefix={<UserOutlined />}
-              />
-            </Card>
-          </Col>
-          <Col flex="1 1 18%">
-            <Card>
-              <Statistic
-                title="Total Families"
-                value={0}
-                prefix={<TeamOutlined />}
-              />
-            </Card>
-          </Col>
-          <Col flex="1 1 18%">
-            <Card>
-              <Statistic
-                title="Total Orders Succeeded"
-                value={0}
-                prefix={<CheckCircleOutlined style={{ color: "green" }} />}
-              />
-            </Card>
-          </Col>
-          <Col flex="1 1 18%">
-            <Card>
-              <Statistic
-                title="Total Orders Pending"
-                value={0}
-                prefix={<ClockCircleOutlined style={{ color: "orange" }} />}
-              />
-            </Card>
-          </Col>
-          <Col flex="1 1 18%">
-            <Card>
-              <Statistic
-                title="Total Orders Failed"
-                value={0}
-                prefix={<CloseCircleOutlined style={{ color: "red" }} />}
-              />
-            </Card>
-          </Col>
-        </Row>
-
-        <Row gutter={16} style={{ marginBottom: "24px" }}>
-          <Col span={6}>
-            <Card>
-              <Statistic title="Total Main Packages purchased" value={0} />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic title="Total Extra Packages purchased" value={0} />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic title="Total Combo Packages purchased" value={0} />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="Revenue"
-                value={0}
-                prefix={<ArrowUpOutlined />}
-              />
-            </Card>
-          </Col>
-        </Row>
-      </Spin>
-      <Card style={{ marginTop: "24px" }}>
-        <h2>User Orders</h2>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} md={12}>
+          <Card title="Package Extras Statistics">
+            <div style={{ height: 300 }}>
+              <Bar data={data} options={options} />
+            </div>
+          </Card>
+        </Col>
+        <Col xs={24} md={12}>
+          <Card title="Actions">
+            <Button
+              style={{ width: "100%", marginBottom: 16 }}
+              onClick={() => {
+                setIsDiscountModalVisible(true);
+              }}
+            >
+              Show Discount
+            </Button>
             <Search
               placeholder="Search by keyword"
               onSearch={handleSearch}
-              style={{ width: 200, marginBottom: 16 }}
+              style={{ width: "100%", marginBottom: 16 }}
             />
             <Select
               placeholder="Filter by Package"
               onChange={handlePackageChange}
               allowClear
-              style={{ width: 200, marginLeft: 16, marginBottom: 16 }}
+              style={{ width: "100%" }}
               defaultValue="ALL"
             >
               <Option value="ALL">ALL</Option>
@@ -431,42 +382,36 @@ const OrderPage = () => {
               <Option value="EXTRA">EXTRA</Option>
               <Option value="COMBO">COMBO</Option>
             </Select>
-          </div>
-          <Button
-            style={{ width: 200, marginBottom: 16 }}
-            onClick={() => {
-              setIsDiscountModalVisible(true);
-            }}
-          >
-            Show Discount
-          </Button>
-        </div>
-        <Spin spinning={loading}>
-          <Table
-            dataSource={userOrders}
-            columns={columns}
-            rowKey="id_order"
-            pagination={{
-              current: userOrderDTO.page,
-              pageSize: userOrderDTO.itemsPerPage,
-              total: totalOrders,
-            }}
-            onChange={handleTableChange}
-            scroll={{ x: "max-content" }}
-          />
-        </Spin>
-      </Card>
+          </Card>
+        </Col>
+        <Col xs={24}>
+          <Card title="User Orders">
+            <Spin spinning={loading}>
+              <Table
+                dataSource={userOrders}
+                columns={columns}
+                rowKey="id_order"
+                pagination={{
+                  current: userOrderDTO.page,
+                  pageSize: userOrderDTO.itemsPerPage,
+                  total: totalOrders,
+                }}
+                onChange={handleTableChange}
+                scroll={{ x: "max-content" }}
+              />
+            </Spin>
+          </Card>
+        </Col>
+      </Row>
       <OrderModal
         isModalVisible={isModalVisible}
         handleModalClose={handleModalClose}
         selectedOrder={selectedOrder}
-      ></OrderModal>
+      />
       <DiscountModal
         visible={isDiscountModalVisible}
-        onClose={function (): void {
-          setIsDiscountModalVisible(false);
-        }}
-      ></DiscountModal>
+        onClose={() => setIsDiscountModalVisible(false)}
+      />
     </DefaultLayout>
   );
 };
